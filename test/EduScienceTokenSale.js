@@ -1,34 +1,34 @@
-var MEDToken = artifacts.require("./MEDToken.sol");
-var MEDTokenSale = artifacts.require("./MEDTokenSale.sol");
+var EduScience = artifacts.require("./EduScienceToken.sol");
+var EduScienceSale = artifacts.require("./EduScienceTokenSale.sol");
 
-contract("MEDTokenSale", function(accounts) {
+contract("EduScienceSale", function(accounts) {
 	var tokenInstance;
   	var tokenSaleInstance;
   	var admin = accounts[0];
   	var buyer = accounts[1];
- 	var tokenPrice = 1000000000000; // Wei = 0.000001 Ether
+ 	  var tokenPrice = 1000000000000000; // Wei = 0.001 Ether
   	var tokensAvailable = 750000;
   	var tokensAmount;
 
-  	it("MEDTokenSale contract test\\/", function() {
-   		return MEDTokenSale.deployed().then(function(instance) {
+  	it("EduScienceSale contract test\\/", function() {
+   		return EduScienceSale.deployed().then(function(instance) {
       	tokenSaleInstance = instance;
       	return tokenSaleInstance.address;
     }).then(function(address) {
-      	assert.notEqual(address, 0x0, "MEDTokenSale address is not 0x0!");
+      	assert.notEqual(address, 0x0, "EduScienceSale address is not 0x0!");
       	return tokenSaleInstance.tokenContract();
     }).then(function(address) {
-     	assert.notEqual(address, 0x0, "MEDToken address is not 0x0!");
+     	assert.notEqual(address, 0x0, "EduScience address is not 0x0!");
       	return tokenSaleInstance.tokenPrice();
     }).then(function(price) {
-      	assert.equal(price, tokenPrice, "Token price set correctly!");
+      	assert.equal(price.toNumber(), tokenPrice, "Token price set correctly!");
     	});
   	});
 
  	it("Token aquisition test\\/", function() {
-    	return MEDToken.deployed().then(function(instance) {
+    	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
-      	return MEDTokenSale.deployed();
+      	return EduScienceSale.deployed();
     }).then(function(instance) {
       	tokenSaleInstance = instance;
       	// Transfer initial tokens in the tokenSale contract, 75% of the total supply
@@ -61,9 +61,9 @@ contract("MEDTokenSale", function(accounts) {
   	});
 
   	it("Token sale end test\\/", function() {
-    	return MEDToken.deployed().then(function(instance) {
+    	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
-      	return MEDTokenSale.deployed();
+      	return EduScienceSale.deployed();
     }).then(function(instance) {
       	tokenSaleInstance = instance;
       	// End sale by other than admin

@@ -1,25 +1,25 @@
-var MEDToken = artifacts.require("./MEDToken.sol");
+var EduScienceToken = artifacts.require("./EduScienceToken.sol");
 
-contract("MEDToken", function(accounts) {
+contract("EduScienceToken", function(accounts) {
   var tokenInstance;
 
-	it("MEDToken contract test\\/", function() {
-		return MEDToken.deployed().then(function(instance) {
+	it("EduScienceToken contract test\\/", function() {
+		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.name();
 		}).then(function(name) {
-			assert.equal(name, "MEDher", "Name test!");
+			assert.equal(name, "EduScience", "Name test!");
 			return tokenInstance.symbol();
 		}).then(function(symbol) {
-			assert.equal(symbol, "MED", "Symbol test!");
-			return tokenInstance.standard();
+			assert.equal(symbol, "ESc", "Symbol test!");
+			return tokenInstance.version();
 		}).then(function(standard) {
-			assert.equal(standard, "MEDher Token v1.0");
+			assert.equal(standard, "EduScience Token v1.0");
 		});
 	});
 
 	it("Total supply test\\/", function() {
-		return MEDToken.deployed().then(function(instance) {
+		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
 		}).then(function(totalSupply) {
@@ -31,7 +31,7 @@ contract("MEDToken", function(accounts) {
 	});
 
 	it("Transfer test\\/", function() {
-		return MEDToken.deployed().then(function(instance) {
+		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.transfer.call(accounts[1], 999999999);
 		}).then(assert.fail).catch(function(error) {
@@ -56,7 +56,7 @@ contract("MEDToken", function(accounts) {
 	});
 
 	it("Delegated transfer approval test\\/", function() {
-    	return MEDToken.deployed().then(function(instance) {
+    	return EduScienceToken.deployed().then(function(instance) {
     		tokenInstance = instance;
      		return tokenInstance.approve.call(accounts[1], 100);
     	}).then(function(success) {
@@ -75,7 +75,7 @@ contract("MEDToken", function(accounts) {
   	});
 
 	it("Delegated transfer test\\/", function() {
-    	return MEDToken.deployed().then(function(instance) {
+    	return EduScienceToken.deployed().then(function(instance) {
       		tokenInstance = instance;
       		fromAccount = accounts[7];
       		toAccount = accounts[8];

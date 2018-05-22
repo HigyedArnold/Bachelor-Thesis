@@ -1,10 +1,10 @@
 pragma solidity ^0.4.17;
 
-import "./MEDToken.sol";
+import "./EduScienceToken.sol";
 
-contract MEDTokenSale {
+contract EduScienceTokenSale {
 	address admin;
-	MEDToken public tokenContract;
+	EduScienceToken public tokenContract;
 	uint256 public tokenPrice;
 	uint256 public tokensSold;
 
@@ -18,18 +18,19 @@ contract MEDTokenSale {
 		uint256 _amount);
 
 	// Constructor
-	constructor(MEDToken _tokenContract, uint256 _tokenPrice) public {
+	constructor(EduScienceToken _tokenContract, uint256 _tokenPrice) public {
 		// Assign an admin
 		admin = msg.sender;
 		// Token contract
 		tokenContract = _tokenContract;
 		// Token price
 		tokenPrice = _tokenPrice;
+		tokensSold = 0;
 	}
 
 	// Buy tokens used by the client side
 	function buyTokens(uint256 _tokenAmount) public payable {
-		require (msg.value ==mul(_tokenAmount, tokenPrice));
+		require (msg.value == mul(_tokenAmount, tokenPrice));
 		require (tokenContract.balanceOf(this) >= _tokenAmount);
 		// revert if transaction unsuccessful
 		require (tokenContract.transfer(msg.sender, _tokenAmount));
