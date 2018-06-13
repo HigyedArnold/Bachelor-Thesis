@@ -1,0 +1,148 @@
+import React, { Component } from 'react'
+import swal from 'sweetalert'
+import { Line } from 'rc-progress';
+import store from '../../../store'
+
+class ICOSaleForm extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      amount: '',
+      address: '0x0',
+      icoPrice: '0',
+      balance: '0',
+      contractAddress: '0x0',
+      tokensSold: '0',
+      tokensAvailable: '0'
+    };
+    this.initStaticSale()
+    this.initDynamicSale()
+    this.initDynamicToken()
+    this.listenForEvents()
+  }
+
+  onInputChange(event) {
+    this.setState({ amount: event.target.value })
+  }
+
+  buyTokens(event) {
+    event.preventDefault();
+    if (this.state.amount === "") {
+      return swal('Please enter a number.')
+    }
+    this.props.onICOSaleFormSubmit(this.state.amount)
+  }
+
+  // init() {
+  //   let containerInstance = this
+  //   let web3 = store.getState().web3.web3Instance;
+  //   if (typeof web3 !== 'undefined') {
+  //     const eduScienceTokenSale = contract(EduScienceTokenSale)
+  //     eduScienceTokenSale.setProvider(web3.currentProvider)
+  //     let contractSaleInstance
+  //     web3.eth.getCoinbase((error, coinbase) => {
+  //       if (error) {
+  //         console.error(error)
+  //       }
+  //       containerInstance.setState({address: coinbase})
+  //       //console.log("Your address: " + coinbase)
+  //       eduScienceTokenSale.deployed().then(function(instance) {
+  //       contractSaleInstance = instance
+  //       return contractSaleInstance.tokenPrice()
+  //       }).then(function(icoPrice) {
+  //         containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
+  //         //console.log("ICO price: " + web3.fromWei(icoPrice, "ether").toNumber() + " ETHER")
+  //         containerInstance.setState({contractAddress: contractSaleInstance.address})
+  //         //console.log("ICO sale contract address: " + contractSaleInstance.address)
+  //         return contractSaleInstance.tokensSold()
+  //       }).then(function(tokensSold) {
+  //         containerInstance.setState({tokensSold: tokensSold.toNumber()})
+  //         //console.log("Tokens sold: " + tokensSold.toNumber())
+  //         return contractSaleInstance.tokensAvailable()
+  //       }).then(function(tokensAvailable) {
+  //         containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
+  //         //console.log("Tokens available: " + tokensAvailable.toNumber())
+  //       })
+  //     })
+  //   }
+  // }
+
+  initStaticSale() {
+    let containerInstance = this
+    let web3 = store.getState().web3.web3Instance;
+    if (typeof web3 !== 'undefined') {
+      let contractSaleInstance = store.getState().saleContract.saleContract
+     web3.eth.getCoinbase((error, coinbase) => {
+        if (error) {
+          console.error(error)
+        }
+        containerInstance.setState({address: coinbase})
+        contractSaleInstance.tokenPrice().then(function(icoPrice) {
+          containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
+          containerInstance.setState({contractAddress: contractSaleInstance.address})
+        })
+      })
+    }
+  }
+
+  initDynamicSale() {
+    let containerInstance = this
+    let contractSaleInstance = store.getState().saleContract.saleContract
+    contractSaleInstance.tokensSold().then(function(tokensSold) {
+      containerInstance.setState({tokensSold: tokensSold.toNumber()})
+      contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
+        containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
+      })
+    })
+  }
+
+  initDynamicToken() {
+    let containerInstance = this
+    let contractTokenInstance = store.getState().tokenContract.tokenContract
+    contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
+      containerInstance.setState({balance: balance.toNumber()})
+    })
+  }
+
+  listenForEvents() {
+    let containerInstance = this
+    let contractSaleInstance = store.getState().saleContract.saleContract
+    contractSaleInstance.Sell({}, {
+      fromBlock: 0,
+      toBlock: "lastest",
+
+    }).watch(function(error, event) {
+      console.log("Event triggered: ", event)
+      containerInstance.initDynamicSale()
+      containerInstance.initDynamicToken()
+      containerInstance.state.amount = ''
+      containerInstance.render()
+    })
+  }
+
+  render() {
+    return(
+      <form className="pure-form pure-form-stacked" onSubmit={this.buyTokens.bind(this)}>
+        <fieldset>
+          <label>Price is <strong>{this.state.icoPrice}</strong> Ether. Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
+          <br />
+          <label>Your account address: <strong>{this.state.address}</strong></label>
+          <label>The sale contract address: <strong>{this.state.contractAddress}</strong></label>
+          <br />
+          <label htmlFor="name">Amount to buy:</label>
+          <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onInputChange.bind(this)} />
+          <br />
+          <button type="submit" className="pure-button pure-button-primary">Buy Tokens</button>
+          <br />
+          <br />
+          <label>{((this.state.tokensSold / this.state.tokensAvailable) * 100).toFixed(2)}% of tokens sold!</label>
+          <Line percent={(this.state.tokensSold / this.state.tokensAvailable) * 100} strokeWidth="1" strokeColor="#0066ff" />
+        </fieldset>
+      </form>
+    )
+  }
+}
+
+export default ICOSaleForm

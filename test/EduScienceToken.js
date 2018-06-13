@@ -3,7 +3,7 @@ var EduScienceToken = artifacts.require("./EduScienceToken.sol");
 contract("EduScienceToken", function(accounts) {
   var tokenInstance;
 
-	it("EduScienceToken contract test\\/", function() {
+	it("EduScienceToken: Contract properties test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.name();
@@ -18,7 +18,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("Total supply test\\/", function() {
+	it("EduScienceToken: Total supply test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
@@ -30,7 +30,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("Transfer test\\/", function() {
+	it("EduScienceToken: Transaction test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.transfer.call(accounts[1], 999999999);
@@ -55,7 +55,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("Delegated transfer approval test\\/", function() {
+	it("EduScienceToken: Delegated transaction approval test\\/", function() {
     	return EduScienceToken.deployed().then(function(instance) {
     		tokenInstance = instance;
      		return tokenInstance.approve.call(accounts[1], 100);
@@ -64,7 +64,7 @@ contract("EduScienceToken", function(accounts) {
       		return tokenInstance.approve(accounts[1], 100, {from: accounts[0] });
     	}).then(function(receipt) {
       		assert.equal(receipt.logs.length, 1, "Event triggered!");
-     		assert.equal(receipt.logs[0].event, "Approval", "Expecting Approval event!");
+     		  assert.equal(receipt.logs[0].event, "Approval", "Expecting Approval event!");
       		assert.equal(receipt.logs[0].args._owner, accounts[0], "From address!");
       		assert.equal(receipt.logs[0].args._spender, accounts[1], "To address!");
       		assert.equal(receipt.logs[0].args._value, 100, "Approved amount!");
@@ -74,7 +74,7 @@ contract("EduScienceToken", function(accounts) {
     	});
   	});
 
-	it("Delegated transfer test\\/", function() {
+	it("EduScienceToken: Delegated transaction test\\/", function() {
     	return EduScienceToken.deployed().then(function(instance) {
       		tokenInstance = instance;
       		fromAccount = accounts[7];

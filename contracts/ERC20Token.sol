@@ -1,8 +1,9 @@
 pragma solidity ^0.4.17;
 
 import "./Token.sol";
+import "./Accessible.sol";
 
-contract ERC20Token is Token {
+contract ERC20Token is Token, Accessible {
 
 	// Since the modifier is public, Solidity already provides a getter function for the variable. 
 	uint256 public totalSupply;

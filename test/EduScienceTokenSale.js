@@ -9,8 +9,9 @@ contract("EduScienceSale", function(accounts) {
  	  var tokenPrice = 1000000000000000; // Wei = 0.001 Ether
   	var tokensAvailable = 750000;
   	var tokensAmount;
+    var days = 1;
 
-  	it("EduScienceSale contract test\\/", function() {
+  	it("EduScienceSale: EduScienceSale contract test\\/", function() {
    		return EduScienceSale.deployed().then(function(instance) {
       	tokenSaleInstance = instance;
       	return tokenSaleInstance.address;
@@ -18,14 +19,20 @@ contract("EduScienceSale", function(accounts) {
       	assert.notEqual(address, 0x0, "EduScienceSale address is not 0x0!");
       	return tokenSaleInstance.tokenContract();
     }).then(function(address) {
-     	assert.notEqual(address, 0x0, "EduScience address is not 0x0!");
+      	assert.notEqual(address, 0x0, "EduScience address is not 0x0!");
       	return tokenSaleInstance.tokenPrice();
     }).then(function(price) {
       	assert.equal(price.toNumber(), tokenPrice, "Token price set correctly!");
-    	});
+        return tokenSaleInstance.deadline();
+    }).then(function(deadline) {
+        assert.notEqual(deadline.toNumber(), Date.now(), "Deadline set correctly!");
+        return tokenSaleInstance.saleClosed();
+    }).then(function(saleClosed) {
+        assert.equal(saleClosed, false, "Token sale is not closed!");
+    });
   	});
 
- 	it("Token aquisition test\\/", function() {
+ 	it("EduScienceSale: Token aquisition test\\/", function() {
     	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
       	return EduScienceSale.deployed();
@@ -60,7 +67,7 @@ contract("EduScienceSale", function(accounts) {
     	});
   	});
 
-  	it("Token sale end test\\/", function() {
+  	it("EduScienceSale: Token sale end test\\/", function() {
     	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
       	return EduScienceSale.deployed();
@@ -72,10 +79,11 @@ contract("EduScienceSale", function(accounts) {
       	assert(error.message.indexOf('revert' >= 0, "Only admin can end sale!"));
       	// End sale by admin
       	return tokenSaleInstance.endSale({from: admin });
-    }).then(function(receipt) {
-      	return tokenInstance.balanceOf(admin);
-    }).then(function(balance) {
-      	assert.equal(balance.toNumber(), 999000, "Return unsold tokens to admin!");
+    }).then(assert.fail).catch(function(error) {
+        assert(error.message.indexOf('revert' >= 0, "Sale not met the deadline to be ended!"));
+    //   	return tokenInstance.balanceOf(admin);
+    // }).then(function(balance) {
+    //   	assert.equal(balance.toNumber(), 999000, "Return unsold tokens to admin!");
       	});
   	});
 
