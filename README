@@ -1,0 +1,5 @@
+truffle console
+EduScienceTokenSale.deployed().then(function(i) {tokenSale=i;});
+EduScienceToken.deployed().then(function(i) {token = i;});
+TokensAvailable = 750000; admin = web3.eth.accounts[0];
+token.transfer(tokenSale.address, tokensAvailable, {from: admin});
