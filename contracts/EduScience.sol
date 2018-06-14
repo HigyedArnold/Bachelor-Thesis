@@ -57,5 +57,22 @@ contract EduScience is Accessible {
     }
   }
   // ---------------- Aunthentication part ---------------- //
+  // ----------------    IPFS test part    ---------------- //
+
+  mapping (address => string) public datas;
+
+  event Store(
+    address publisher,
+    string ipfsHash);
+
+  function storeData(string _ipfsHash) public {
+    datas[msg.sender] = _ipfsHash;
+    emit Store(msg.sender, _ipfsHash);
+  }
+
+  function getData() public constant returns (string) {
+    return datas[msg.sender];
+  }
+  // ----------------    IPFS test part    ---------------- //
 
 }

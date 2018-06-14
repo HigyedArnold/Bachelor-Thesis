@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => {
     apAddress: state.user.data.apAddress,
     framount: state.user.data.framount,
     frAddress: state.user.data.frAddress,
-    frToAddress: state.user.data.frToAddress,
+    frToAddress: state.user.data.frToAddress
   };
 }
 
@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch) => {
     onTransferFromFormSubmit: (framount, frAddress, frToAddress) => {
       event.preventDefault()
       dispatch(transferFrom(framount, frAddress, frToAddress))
-    },
+    }
   }
 }
 

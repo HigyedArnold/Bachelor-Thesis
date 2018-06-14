@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-//import PublishFormContainer from '../../ui/publishform/PublishFormContainer'
+import PublishFormContainer from '../../ui/publishform/PublishFormContainer'
 
 class Publish extends Component {
   render() {
@@ -8,7 +8,8 @@ class Publish extends Component {
         <div className="pure-g">
           <div className="pure-u-1-1">
             <h1>Publish</h1>
-            <p>Edit your account details here.</p>
+            <p>Publish your article in pdf format here.</p>
+            <PublishFormContainer />
           </div>
         </div>
       </main>

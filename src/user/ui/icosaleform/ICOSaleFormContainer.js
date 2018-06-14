@@ -4,7 +4,7 @@ import { buyICO } from './ICOSaleFormActions'
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    amount: state.user.data.amount,
+    amount: state.user.data.amount
   };
 }
 
