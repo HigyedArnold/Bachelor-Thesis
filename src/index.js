@@ -16,6 +16,7 @@ import Home from './layouts/home/Home'
 import Dashboard from './layouts/dashboard/Dashboard'
 import SignUp from './user/layouts/signup/SignUp'
 import ICOSale from './user/layouts/icosale/ICOSale'
+import Transfer from './user/layouts/transfer/Transfer'
 import Publish from './user/layouts/publish/Publish'
 import Profile from './user/layouts/profile/Profile'
 
@@ -68,6 +69,7 @@ ReactDOM.render((
           <IndexRoute component={Home} />
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
           <Route path="icosale" component={UserIsAuthenticated(ICOSale)} />
+          <Route path="transfer" component={UserIsAuthenticated(Transfer)} />
           <Route path="publish" component={UserIsAuthenticated(Publish)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />

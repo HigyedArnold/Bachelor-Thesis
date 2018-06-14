@@ -9,7 +9,7 @@ class ICOSaleForm extends Component {
     super(props)
 
     this.state = {
-      amount: '',
+      amount: '0',
       address: '0x0',
       icoPrice: '0',
       balance: '0',
@@ -51,11 +51,11 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractSaleInstance = store.getState().saleContract.saleContract
     contractSaleInstance.tokensSold().then(function(tokensSold) {
-      if(containerInstance.refs.myRef) {
+      if(containerInstance.refs.ref) {
         containerInstance.setState({tokensSold: tokensSold.toNumber()})
       }
       contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
-        if(containerInstance.refs.myRef) {
+        if(containerInstance.refs.ref) {
           containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
         }
       })
@@ -66,7 +66,7 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractTokenInstance = store.getState().tokenContract.tokenContract
     contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
-      if(containerInstance.refs.myRef) {
+      if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }
     })
@@ -80,7 +80,7 @@ class ICOSaleForm extends Component {
       toBlock: "lastest",
 
     }).watch(function(error, event) {
-      //console.log("Event triggered: ", event)
+      //console.log("Sell event triggered: ", event)
       containerInstance.initDynamicSale()
       containerInstance.initDynamicToken()
       containerInstance.state.amount = ''
@@ -92,21 +92,21 @@ class ICOSaleForm extends Component {
     return(
       <form className="pure-form pure-form-stacked" onSubmit={this.buyTokens.bind(this)}>
         <fieldset>
-        <div ref="myRef">
-          <label>Price is <strong>{this.state.icoPrice}</strong> Ether. Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
-          <br />
-          <label>Your account address: <strong>{this.state.address}</strong></label>
-          <label>The sale contract address: <strong>{this.state.contractAddress}</strong></label>
-          <br />
-          <label htmlFor="name">Amount to buy:</label>
-          <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onInputChange.bind(this)} />
-          <br />
-          <button type="submit" className="pure-button pure-button-primary">Buy Tokens</button>
-          <br />
-          <br />
-          <label>{((this.state.tokensSold / this.state.tokensAvailable) * 100).toFixed(2)}% of tokens sold!</label>
-          <Line percent={(this.state.tokensSold / this.state.tokensAvailable) * 100} strokeWidth="1" strokeColor="#0066ff" />
-        </div>
+          <div ref="ref">
+            <label>Price is <strong>{this.state.icoPrice}</strong> Ether. Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
+            <br />
+            <label>Your account address: <strong>{this.state.address}</strong></label>
+            <label>The sale contract address: <strong>{this.state.contractAddress}</strong></label>
+            <br />
+            <label htmlFor="name">Amount to buy:</label>
+            <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onInputChange.bind(this)} />
+            <br />
+            <button type="submit" className="pure-button pure-button-primary">Buy Tokens</button>
+            <br />
+            <br />
+            <label>{((this.state.tokensSold / this.state.tokensAvailable) * 100).toFixed(2)}% of tokens sold!</label>
+            <Line percent={(this.state.tokensSold / this.state.tokensAvailable) * 100} strokeWidth="1" strokeColor="#0066ff" />
+          </div>
         </fieldset>
       </form>
     )

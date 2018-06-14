@@ -23,6 +23,9 @@ class App extends Component {
           <Link to="/icosale" className="pure-menu-link">ICOSale</Link>
         </li>
         <li className="pure-menu-item">
+          <Link to="/transfer" className="pure-menu-link">Transfer</Link>
+        </li>
+        <li className="pure-menu-item">
           <Link to="/publish" className="pure-menu-link">Publish</Link>
         </li>
         <li className="pure-menu-item">
