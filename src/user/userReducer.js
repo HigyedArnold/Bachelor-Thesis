@@ -1,7 +1,6 @@
 const initialState = {
   data: {
-    name: null,
-    amount: null
+    name: null
   }
 }
 
@@ -12,16 +11,10 @@ const userReducer = (state = initialState, action) => {
       data: {
         name: action.payload
     }})
-  } else if (action.type === 'BUY_ICO') {
-    return Object.assign({}, state, {
-      data: {
-        amount: action.payload
-    }})
   } else if (action.type === 'USER_LOGGED_OUT') {
     return Object.assign({}, state, {
       data: {
         name: null,
-        amount: null,
     }})
   }
 

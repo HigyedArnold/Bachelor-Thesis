@@ -35,56 +35,16 @@ class ICOSaleForm extends Component {
     this.props.onICOSaleFormSubmit(this.state.amount)
   }
 
-  // init() {
-  //   let containerInstance = this
-  //   let web3 = store.getState().web3.web3Instance;
-  //   if (typeof web3 !== 'undefined') {
-  //     const eduScienceTokenSale = contract(EduScienceTokenSale)
-  //     eduScienceTokenSale.setProvider(web3.currentProvider)
-  //     let contractSaleInstance
-  //     web3.eth.getCoinbase((error, coinbase) => {
-  //       if (error) {
-  //         console.error(error)
-  //       }
-  //       containerInstance.setState({address: coinbase})
-  //       //console.log("Your address: " + coinbase)
-  //       eduScienceTokenSale.deployed().then(function(instance) {
-  //       contractSaleInstance = instance
-  //       return contractSaleInstance.tokenPrice()
-  //       }).then(function(icoPrice) {
-  //         containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
-  //         //console.log("ICO price: " + web3.fromWei(icoPrice, "ether").toNumber() + " ETHER")
-  //         containerInstance.setState({contractAddress: contractSaleInstance.address})
-  //         //console.log("ICO sale contract address: " + contractSaleInstance.address)
-  //         return contractSaleInstance.tokensSold()
-  //       }).then(function(tokensSold) {
-  //         containerInstance.setState({tokensSold: tokensSold.toNumber()})
-  //         //console.log("Tokens sold: " + tokensSold.toNumber())
-  //         return contractSaleInstance.tokensAvailable()
-  //       }).then(function(tokensAvailable) {
-  //         containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
-  //         //console.log("Tokens available: " + tokensAvailable.toNumber())
-  //       })
-  //     })
-  //   }
-  // }
-
   initStaticSale() {
     let containerInstance = this
     let web3 = store.getState().web3.web3Instance;
-    if (typeof web3 !== 'undefined') {
-      let contractSaleInstance = store.getState().saleContract.saleContract
-     web3.eth.getCoinbase((error, coinbase) => {
-        if (error) {
-          console.error(error)
-        }
-        containerInstance.setState({address: coinbase})
-        contractSaleInstance.tokenPrice().then(function(icoPrice) {
-          containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
-          containerInstance.setState({contractAddress: contractSaleInstance.address})
-        })
-      })
-    }
+    let contractSaleInstance = store.getState().saleContract.saleContract
+    let coinbase = store.getState().address.address
+    contractSaleInstance.tokenPrice().then(function(icoPrice) {
+      containerInstance.setState({address: coinbase})
+      containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
+      containerInstance.setState({contractAddress: contractSaleInstance.address})
+    })
   }
 
   initDynamicSale() {

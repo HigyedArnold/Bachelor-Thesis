@@ -7,6 +7,8 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from './util/wrappers.js'
 import getWeb3 from './util/web3/getWeb3'
 import getTokenContract from './util/tokenContract/getTokenContract'
 import getSaleContract from './util/saleContract/getSaleContract'
+import getEduContract from './util/eduContract/getEduContract'
+import getAddress from './util/address/getAddress'
 
 // Layouts
 import App from './App'
@@ -43,6 +45,20 @@ getSaleContract.then(results => {
 })
 .catch(() => {
   console.log('Error in SaleContract deployment.')
+})
+
+getEduContract.then(results => {
+  console.log('EduContract deployed!')
+})
+.catch(() => {
+  console.log('Error in EduContract deployment.')
+})
+
+getAddress.then(results => {
+  console.log('Address obtained!')
+})
+.catch(() => {
+  console.log('Error in getting address.')
 })
 
 ReactDOM.render((
