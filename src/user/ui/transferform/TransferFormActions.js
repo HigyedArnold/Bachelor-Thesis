@@ -10,3 +10,13 @@ export function transfer(amount, toAddress) {
   }).catch(function(result) {
   })
 }
+
+export function approve(apamount, apAddress) {
+  let contractTokenInstance = store.getState().tokenContract.tokenContract
+  let coinbase = store.getState().address.address
+  contractTokenInstance.approve(apAddress, apamount, {from: coinbase}).then(function(result) {
+    console.log("Tokens approved: ", apamount)
+    swal('Tokens approved!', 'Transaction successful!','success')
+  }).catch(function(result) {
+  })
+}

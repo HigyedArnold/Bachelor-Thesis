@@ -8,9 +8,11 @@ class TransferForm extends Component {
     super(props)
 
     this.state = {
-      amount: '0',
-      toAddress: '0x0',
-      balance: '0'
+      amount: '',
+      toAddress: '',
+      apamount: '',
+      apAddress: '',
+      balance: ''
     }
 
     this.initDynamicToken()
@@ -25,6 +27,14 @@ class TransferForm extends Component {
     this.setState({ toAddress: event.target.value })
   }
 
+  onApAmountInputChange(event) {
+    this.setState({ apamount: event.target.value })
+  }
+
+  onApAddressInputChange(event) {
+    this.setState({ apAddress: event.target.value })
+  }
+
   transferTokens(event) {
     event.preventDefault();
     if (this.state.amount === "") {
@@ -34,6 +44,17 @@ class TransferForm extends Component {
       return swal('Please enter a valid address.')
     }
     this.props.onTransferFormSubmit(this.state.amount, this.state.toAddress)
+  }
+
+  approveTokens(event) {
+    event.preventDefault();
+    if (this.state.apamount === "") {
+      return swal('Please enter a number.')
+    }
+    if (this.state.apAddress === "") {
+      return swal('Please enter a valid address.')
+    }
+    this.props.onApproveFormSubmit(this.state.apamount, this.state.apAddress)
   }
 
   initDynamicToken() {
@@ -67,11 +88,11 @@ class TransferForm extends Component {
 
   render() {
     return(
-      <form className="pure-form pure-form-stacked" onSubmit={this.transferTokens.bind(this)}>
-        <fieldset>
-          <div ref="ref">
+      <div ref="ref">
+        <form className="pure-form pure-form-stacked" onSubmit={this.transferTokens.bind(this)}>
+          <fieldset>
             <label>Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
-            <br />
+            <label>Transfer X amount of ESc tokens to 0xX address from your account.</label>
             <label>Amount to transfer:</label>
             <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onAmountInputChange.bind(this)} />
             <br />
@@ -79,9 +100,23 @@ class TransferForm extends Component {
             <input id="toAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.toAddress} onChange={this.onToAddressInputChange.bind(this)} />
             <br />
             <button type="submit" className="pure-button pure-button-primary">Transfer</button>
-          </div>
-        </fieldset>
-      </form>
+          </fieldset>
+        </form>
+        <br />
+        <br />
+        <form className="pure-form pure-form-stacked" onSubmit={this.approveTokens.bind(this)}>
+          <fieldset>
+            <label>Approve X amount of ESc tokens for 0xX address to spend from your account.</label>
+            <label>Amount to approve:</label>
+            <input id="apamount" type="text" pattern="[1-9][0-9]*" value={this.state.apamount} onChange={this.onApAmountInputChange.bind(this)} />
+            <br />
+            <label>For address:</label>
+            <input id="apAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.apAddress} onChange={this.onApAddressInputChange.bind(this)} />
+            <br />
+            <button type="submit" className="pure-button pure-button-primary">Approve</button>
+          </fieldset>
+        </form>
+      </div>
     )
   }
 }

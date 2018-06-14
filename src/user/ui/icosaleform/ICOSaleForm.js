@@ -9,13 +9,13 @@ class ICOSaleForm extends Component {
     super(props)
 
     this.state = {
-      amount: '0',
-      address: '0x0',
-      icoPrice: '0',
-      balance: '0',
-      contractAddress: '0x0',
-      tokensSold: '0',
-      tokensAvailable: '0'
+      amount: '',
+      address: '',
+      icoPrice: '',
+      balance: '',
+      contractAddress: '',
+      tokensSold: '',
+      tokensAvailable: ''
     };
     this.initStaticSale()
     this.initDynamicSale()
