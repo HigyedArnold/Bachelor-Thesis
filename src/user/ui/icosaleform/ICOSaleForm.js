@@ -51,9 +51,13 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractSaleInstance = store.getState().saleContract.saleContract
     contractSaleInstance.tokensSold().then(function(tokensSold) {
-      containerInstance.setState({tokensSold: tokensSold.toNumber()})
+      if(containerInstance.refs.myRef) {
+        containerInstance.setState({tokensSold: tokensSold.toNumber()})
+      }
       contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
-        containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
+        if(containerInstance.refs.myRef) {
+          containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
+        }
       })
     })
   }
@@ -62,7 +66,9 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractTokenInstance = store.getState().tokenContract.tokenContract
     contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
-      containerInstance.setState({balance: balance.toNumber()})
+      if(containerInstance.refs.myRef) {
+        containerInstance.setState({balance: balance.toNumber()})
+      }
     })
   }
 
@@ -70,11 +76,11 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractSaleInstance = store.getState().saleContract.saleContract
     contractSaleInstance.Sell({}, {
-      fromBlock: 0,
+      fromBlock: "0",
       toBlock: "lastest",
 
     }).watch(function(error, event) {
-      console.log("Event triggered: ", event)
+      //console.log("Event triggered: ", event)
       containerInstance.initDynamicSale()
       containerInstance.initDynamicToken()
       containerInstance.state.amount = ''
@@ -86,6 +92,7 @@ class ICOSaleForm extends Component {
     return(
       <form className="pure-form pure-form-stacked" onSubmit={this.buyTokens.bind(this)}>
         <fieldset>
+        <div ref="myRef">
           <label>Price is <strong>{this.state.icoPrice}</strong> Ether. Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
           <br />
           <label>Your account address: <strong>{this.state.address}</strong></label>
@@ -99,6 +106,7 @@ class ICOSaleForm extends Component {
           <br />
           <label>{((this.state.tokensSold / this.state.tokensAvailable) * 100).toFixed(2)}% of tokens sold!</label>
           <Line percent={(this.state.tokensSold / this.state.tokensAvailable) * 100} strokeWidth="1" strokeColor="#0066ff" />
+        </div>
         </fieldset>
       </form>
     )
