@@ -12,6 +12,9 @@ class TransferForm extends Component {
       toAddress: '',
       apamount: '',
       apAddress: '',
+      framount: '',
+      frAddress: '',
+      frToAddress: '',
       balance: ''
     }
 
@@ -35,6 +38,18 @@ class TransferForm extends Component {
     this.setState({ apAddress: event.target.value })
   }
 
+  onFrAmountInputChange(event) {
+    this.setState({ framount: event.target.value })
+  }
+
+  onFrAddressInputChange(event) {
+    this.setState({ frAddress: event.target.value })
+  }
+
+  onFrToAddressInputChange(event) {
+    this.setState({ frToAddress: event.target.value })
+  }
+
   transferTokens(event) {
     event.preventDefault();
     if (this.state.amount === "") {
@@ -55,6 +70,20 @@ class TransferForm extends Component {
       return swal('Please enter a valid address.')
     }
     this.props.onApproveFormSubmit(this.state.apamount, this.state.apAddress)
+  }
+
+  transferFromTokens(event) {
+    event.preventDefault();
+    if (this.state.framount === "") {
+      return swal('Please enter a number.')
+    }
+    if (this.state.frAddress === "") {
+      return swal('Please enter a valid address.')
+    }
+    if (this.state.frToAddress === "") {
+      return swal('Please enter a valid address.')
+    }
+    this.props.onTransferFromFormSubmit(this.state.framount, this.state.frAddress, this.state.frToAddress)
   }
 
   initDynamicToken() {
@@ -81,6 +110,11 @@ class TransferForm extends Component {
         containerInstance.initDynamicToken()
         containerInstance.state.amount = ''
         containerInstance.state.toAddress = ''
+        containerInstance.state.apamount = ''
+        containerInstance.state.apAddress = ''
+        containerInstance.state.framount = ''
+        containerInstance.state.frAddress = ''
+        containerInstance.state.frToAddress = ''
         containerInstance.render()
       }
     })
@@ -92,7 +126,7 @@ class TransferForm extends Component {
         <form className="pure-form pure-form-stacked" onSubmit={this.transferTokens.bind(this)}>
           <fieldset>
             <label>Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
-            <label>Transfer X amount of ESc tokens to 0xX address from your account.</label>
+            <label>Transfer X amount of ESc tokens to 0xX account from your account.</label>
             <label>Amount to transfer:</label>
             <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onAmountInputChange.bind(this)} />
             <br />
@@ -106,7 +140,7 @@ class TransferForm extends Component {
         <br />
         <form className="pure-form pure-form-stacked" onSubmit={this.approveTokens.bind(this)}>
           <fieldset>
-            <label>Approve X amount of ESc tokens for 0xX address to spend from your account.</label>
+            <label>Approve X amount of ESc tokens for 0xX account to spend from your account.</label>
             <label>Amount to approve:</label>
             <input id="apamount" type="text" pattern="[1-9][0-9]*" value={this.state.apamount} onChange={this.onApAmountInputChange.bind(this)} />
             <br />
@@ -114,6 +148,23 @@ class TransferForm extends Component {
             <input id="apAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.apAddress} onChange={this.onApAddressInputChange.bind(this)} />
             <br />
             <button type="submit" className="pure-button pure-button-primary">Approve</button>
+          </fieldset>
+        </form>
+        <br />
+        <br />
+        <form className="pure-form pure-form-stacked" onSubmit={this.transferFromTokens.bind(this)}>
+          <fieldset>
+            <label>Transfer X amount of ESc tokens to 0xX account from 0xY account.</label>
+            <label>Amount to transfer:</label>
+            <input id="framount" type="text" pattern="[1-9][0-9]*" value={this.state.framount} onChange={this.onFrAmountInputChange.bind(this)} />
+            <br />
+            <label>From address:</label>
+            <input id="frAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.frAddress} onChange={this.onFrAddressInputChange.bind(this)} />
+            <br />
+            <label>To address:</label>
+            <input id="frToAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.frToAddress} onChange={this.onFrToAddressInputChange.bind(this)} />
+            <br />
+            <button type="submit" className="pure-button pure-button-primary">Transfer</button>
           </fieldset>
         </form>
       </div>
