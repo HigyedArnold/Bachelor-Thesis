@@ -11,8 +11,8 @@ contract EduScience is Accessible {
     bytes32 name;
   }
 
-  // ----------------    IPFS final part    ---------------- //
-  
+  // ----------------    IPFS final part   ---------------- //
+  // title must be bytes to use it as a key for mapping, string is not supported
   struct Data {
     // The link to the stored data
     string ipfsHash;
@@ -97,7 +97,7 @@ contract EduScience is Accessible {
     return block.number;
   }
 
-  // ----------------    IPFS final part    ---------------- //
+  // ----------------    IPFS final part   ---------------- //
   // ---------------- Aunthentication part ---------------- //
 
   function login() public constant onlyExistingUser returns (bytes32) {
