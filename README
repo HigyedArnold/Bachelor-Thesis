@@ -1,5 +1,11 @@
 truffle console
 EduScienceTokenSale.deployed().then(function(i) {tokenSale=i;});
 EduScienceToken.deployed().then(function(i) {token = i;});
-TokensAvailable = 750000; admin = web3.eth.accounts[0];
+tokensAvailable = 750000; admin = web3.eth.accounts[0];
 token.transfer(tokenSale.address, tokensAvailable, {from: admin});
+
+-> accounts[0] is the deployer of the contracts, gets all the allocated coins!
+
+TODO: 
+1) make overflow verifications for the input fields on both sides
+2) add more tests

@@ -43,7 +43,10 @@ contract EduScienceTokenSale is Accessible {
     // Events are for the clients to react on changes effieciently.
 	event Sell(
 		address _buyer,
-		uint256 _amount);
+		uint256 _amount,
+		uint256 _tokensSold,
+		uint256 _tokensAvailable,
+		uint256 _balance);
 
 	event SaleClosed(
 		address recipient,
@@ -74,7 +77,7 @@ contract EduScienceTokenSale is Accessible {
 		// Keep track of the sold tokens
 		tokensSold += _tokenAmount;
 		// Trigger Sell event
-		emit Sell(msg.sender, _tokenAmount);
+		emit Sell(msg.sender, _tokenAmount, tokensSold, tokensAvailable, tokenContract.balanceOf(msg.sender));
 	}
 
 	// Ending the token sale only after sale (deadline passed) and only once.

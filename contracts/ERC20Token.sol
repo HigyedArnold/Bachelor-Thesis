@@ -35,7 +35,7 @@ contract ERC20Token is Token, Accessible {
 		balanceOf[msg.sender] -= _value;
 		balanceOf[_to] += _value;
 
-		emit Transfer(msg.sender, _to, _value);
+		emit Transfer(msg.sender, _to, _value, balanceOf[msg.sender]);
 
 		return true;
 	}
@@ -54,7 +54,7 @@ contract ERC20Token is Token, Accessible {
 		balanceOf[_to] += _value;
 		allowance[_from][msg.sender] -= _value;
 
-		emit Transfer(_from, _to, _value);
+		emit Transfer(_from, _to, _value, balanceOf[msg.sender]);
 
 		return true;
 	}

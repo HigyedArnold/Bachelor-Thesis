@@ -15,23 +15,26 @@ module.exports = function(deployer) {
   deployer.link(Killable, Accessible);
   deployer.deploy(Accessible);
   deployer.link(Accessible, EduScience);
-  deployer.deploy(EduScience);
   deployer.link(Accessible, EduScienceToken);
   // Assure in a promise that it will be created after the EduScienceToken
   deployer.deploy(EduScienceToken, 1000000).then(function() {
-  	// 1000000000000000 Wei = 0.001 Ether
-  	// Check: https://etherconverter.online/
-  	var tokenPrice = 1000000000000000;
-    var tokensAvailable = 750000;
-  	var days = 1;
-    deployer.link(Accessible, EduScienceTokenSale);
-  	return deployer.deploy(EduScienceTokenSale, EduScienceToken.address, tokensAvailable, tokenPrice, 1).then(function() {
-      console.log("Granting acces from EduScienceToken to EduScienceTokenSale!");
-      // Acces is granted, but its functionalities won't be used, since other addresses should be able
-      // to transfer tokens in the EduScienceToken. Access granting is great for functions with restrictions,
-      // meaning that a contract might use b's contract function, if it is allowed.
-      // For security purposes among contract interactions.
-      EduScienceToken.at(EduScienceToken.address).grantAccess(EduScienceTokenSale.address);
+    return deployer.deploy(EduScience, EduScienceToken.address).then(function(){
+    	// 1000000000000000 Wei = 0.001 Ether
+    	// Check: https://etherconverter.online/
+    	var tokenPrice = 1000000000000000;
+      var tokensAvailable = 750000;
+    	var days = 1;
+      deployer.link(Accessible, EduScienceTokenSale);
+    	return deployer.deploy(EduScienceTokenSale, EduScienceToken.address, tokensAvailable, tokenPrice, days).then(function() {
+        console.log("Granting acces from EduScienceToken to EduScienceTokenSale!");
+        console.log("Granting acces from EduScienceToken to EduScience!");
+        // Acces is granted, but its functionalities won't be used, since other addresses should be able
+        // to transfer tokens in the EduScienceToken. Access granting is great for functions with restrictions,
+        // meaning that a contract might use b's contract function, if it is allowed.
+        // For security purposes among contract interactions.
+        EduScienceToken.at(EduScienceToken.address).grantAccess(EduScienceTokenSale.address);
+        EduScienceToken.at(EduScienceToken.address).grantAccess(EduScience.address);
+      });
     });
   });
 };

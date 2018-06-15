@@ -18,7 +18,7 @@ class TransferForm extends Component {
       balance: ''
     }
 
-    this.initDynamicToken()
+    this.initToken()
     this.listenForEvents()
   }
 
@@ -86,7 +86,7 @@ class TransferForm extends Component {
     this.props.onTransferFromFormSubmit(this.state.framount, this.state.frAddress, this.state.frToAddress)
   }
 
-  initDynamicToken() {
+  initToken() {
     let containerInstance = this
     let coinbase = store.getState().address.address
     let contractTokenInstance = store.getState().tokenContract.tokenContract
@@ -107,14 +107,14 @@ class TransferForm extends Component {
     }).watch(function(error, event) {
       if (event.args._from === coinbase) {
         //console.log("Transfer event triggered: ", event)
-        containerInstance.initDynamicToken()
-        containerInstance.state.amount = ''
-        containerInstance.state.toAddress = ''
-        containerInstance.state.apamount = ''
-        containerInstance.state.apAddress = ''
-        containerInstance.state.framount = ''
-        containerInstance.state.frAddress = ''
-        containerInstance.state.frToAddress = ''
+        containerInstance.setState({balance: event.args._balance})
+        containerInstance.setState({amount: ''})
+        containerInstance.setState({toAddress: ''})
+        containerInstance.setState({apamount: ''})
+        containerInstance.setState({apAddress: ''})
+        containerInstance.setState({framount: ''})
+        containerInstance.setState({frAddress: ''})
+        containerInstance.setState({frToAddress: ''})
         containerInstance.render()
       }
     })

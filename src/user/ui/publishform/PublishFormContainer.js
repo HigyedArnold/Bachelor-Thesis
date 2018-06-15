@@ -4,15 +4,16 @@ import { storeData } from './PublishFormActions'
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    buffer: state.user.data.buffer
+    buffer: state.user.data.buffer,
+    title: state.user.data.title
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onStoreData: (buffer) => {
+    onStoreData: (buffer, title) => {
       event.preventDefault()
-      dispatch(storeData(buffer))
+      dispatch(storeData(buffer, title))
     }
   }
 }

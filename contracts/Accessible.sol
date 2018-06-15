@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import './zeppelin/lifecycle/Killable.sol';
+import "./zeppelin/lifecycle/Killable.sol";
 
 contract Accessible is Killable {
 

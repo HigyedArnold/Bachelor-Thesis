@@ -5,7 +5,8 @@ interface Token {
 	event Transfer(
 		address indexed _from,
 		address indexed _to,
-		uint256 _value);
+		uint256 _value,
+		uint256 _balance);
 
     event Approval(
     	address indexed _owner,

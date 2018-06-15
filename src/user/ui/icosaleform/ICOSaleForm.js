@@ -17,9 +17,8 @@ class ICOSaleForm extends Component {
       tokensSold: '',
       tokensAvailable: ''
     };
-    this.initStaticSale()
-    this.initDynamicSale()
-    this.initDynamicToken()
+    this.initSale()
+    this.initToken()
     this.listenForEvents()
   }
 
@@ -35,7 +34,7 @@ class ICOSaleForm extends Component {
     this.props.onICOSaleFormSubmit(this.state.amount)
   }
 
-  initStaticSale() {
+  initSale() {
     let containerInstance = this
     let web3 = store.getState().web3.web3Instance;
     let contractSaleInstance = store.getState().saleContract.saleContract
@@ -44,25 +43,16 @@ class ICOSaleForm extends Component {
       containerInstance.setState({address: coinbase})
       containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
       containerInstance.setState({contractAddress: contractSaleInstance.address})
-    })
-  }
-
-  initDynamicSale() {
-    let containerInstance = this
-    let contractSaleInstance = store.getState().saleContract.saleContract
-    contractSaleInstance.tokensSold().then(function(tokensSold) {
-      if(containerInstance.refs.ref) {
+      contractSaleInstance.tokensSold().then(function(tokensSold) {
         containerInstance.setState({tokensSold: tokensSold.toNumber()})
-      }
-      contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
-        if(containerInstance.refs.ref) {
+        contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
           containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
-        }
+        })
       })
     })
   }
 
-  initDynamicToken() {
+  initToken() {
     let containerInstance = this
     let contractTokenInstance = store.getState().tokenContract.tokenContract
     contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
@@ -81,9 +71,12 @@ class ICOSaleForm extends Component {
 
     }).watch(function(error, event) {
       //console.log("Sell event triggered: ", event)
-      containerInstance.initDynamicSale()
-      containerInstance.initDynamicToken()
-      containerInstance.state.amount = ''
+      containerInstance.setState({tokensSold: event.args._tokensSold.toNumber()})
+      containerInstance.setState({tokensAvailable: event.args._tokensAvailable.toNumber()})
+      if (event.args._buyer === containerInstance.state.address) {
+        containerInstance.setState({balance: event.args._balance.toNumber()})
+      }
+      containerInstance.setState({amount: ''})
       containerInstance.render()
     })
   }

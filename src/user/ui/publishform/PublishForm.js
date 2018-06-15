@@ -10,10 +10,15 @@ class PublishForm extends Component {
     this.state = {
       ipfsHash: '',
       url: 'https://gateway.ipfs.io/ipfs/',
-      buffer:''
+      buffer:'',
+      title: ''
     }
     this.listenForEvents()
 
+  }
+
+  onInputChange(event) {
+    this.setState({ title: event.target.value })
   }
 
   uploadFile(event) {
@@ -25,7 +30,7 @@ class PublishForm extends Component {
     reader.onloadend = () => this.convertToBuffer(reader)   
   }
 
-   convertToBuffer = async(reader) => {
+  convertToBuffer = async(reader) => {
     // The pdf will be converted to a buffer to be stored on the IPFS
     const result = await Buffer.from(reader.result);
     this.setState({buffer: result})
@@ -36,17 +41,10 @@ class PublishForm extends Component {
     if (this.state.buffer === "") {
       return swal('Please select a file.')
     }
-    this.props.onStoreData(this.state.buffer)
-  }
-
-  updateHash() {
-    let containerInstance = this
-    let coinbase = store.getState().address.address
-    let contractEduInstance = store.getState().eduContract.eduContract
-    contractEduInstance.getData({from: coinbase}).then(function(ipfsHash) {
-      containerInstance.setState({ipfsHash: ipfsHash})
-      containerInstance.setState({url: 'https://gateway.ipfs.io/ipfs/' + ipfsHash})
-    })
+    if (this.state.title === "") {
+      return swal('Please enter a title.')
+    }
+    this.props.onStoreData(this.state.buffer, this.state.title)
   }
 
   listenForEvents() {
@@ -58,9 +56,11 @@ class PublishForm extends Component {
       toBlock: "lastest",
     }).watch(function(error, event) {
       if (event.args.publisher === coinbase) {
-        //console.log("Store event triggered: ", event)
-        containerInstance.updateHash()
-        containerInstance.state.buffer = ''
+        console.log("Store event triggered: ", event)
+        containerInstance.setState({ipfsHash: event.args.ipfsHash})
+        containerInstance.setState({url: 'https://gateway.ipfs.io/ipfs/' + event.args.ipfsHash})
+        containerInstance.setState({buffer: ''})
+        containerInstance.setState({title: ''})
         containerInstance.render()
       }
     })
@@ -69,8 +69,12 @@ class PublishForm extends Component {
   render() {
     return (
       <div ref="ref">
-        <h3>Choose your pdf file.</h3>
         <form className="pure-form pure-form-stacked" onSubmit={this.onSubmit.bind(this)}>
+          <br />
+          <label>Title:</label>
+          <input id="title" type="text" pattern="[A-Z][A-Za-z0-9 ]*" onChange={this.onInputChange.bind(this)} placeholder="Title" />
+          <br />
+          <h3>Choose your pdf file.</h3>
           <input id="file" type="file" accept="application/pdf" onChange={this.uploadFile.bind(this)} />
           <br />
           <button type="submit" className="pure-button pure-button-primary">Upload</button>
