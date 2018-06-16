@@ -12,6 +12,7 @@ contract EduScience is Accessible {
   }
 
   // ----------------    IPFS final part   ---------------- //
+
   // title must be bytes to use it as a key for mapping, string is not supported
   struct Data {
     // The link to the stored data
@@ -26,7 +27,7 @@ contract EduScience is Accessible {
     uint256 time;
   }
 
-  EduScienceToken public tokenContract;
+  EduScienceToken private tokenContract;
 
   mapping (address => User) public users;
 
@@ -40,9 +41,11 @@ contract EduScience is Accessible {
   // B
   mapping (bytes32 => Data) private titleData;
   // All titles of data
-  bytes32[] public titles;
+  bytes32[] private titles;
   // Titles count
   uint256 public titlesCount;
+  uint256 public accessFee = 6;
+  uint256 public popularityFee = 2;
 
   // bytes not supported for ipfsHash -> utf58 encoding, not utf8 provided by web3
   event Store(
@@ -67,7 +70,7 @@ contract EduScience is Accessible {
 
   function publish(string _ipfsHash, bytes32 _title) public onlyValidName(_title) onlyExistingUser {
     require (bytes(_ipfsHash).length < 50);
-
+    // on entry 0 nothing stored!
     uint256 n = ++addressCount[msg.sender];
     titlesCount++;
 
@@ -91,6 +94,55 @@ contract EduScience is Accessible {
     emit Store(msg.sender, _ipfsHash);
   }
 
+  // ~~~Search after Title~~~
+
+  // For the list population.
+  function getTitle(uint256 _index) constant public onlyExistingUser returns (bytes32) {
+    // Check if data exists for this entry
+    require (titles[_index] != 0x0);
+    return titles[_index];
+  }
+
+  function getPublisher(bytes32 _title) constant public onlyExistingUser returns (address) {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    return titleData[_title].publisher;
+  }
+
+  function getPopularity(bytes32 _title) constant public onlyExistingUser returns (uint256) {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    return titleData[_title].popularity;
+  }
+
+  function getPublishTime(bytes32 _title) constant public onlyExistingUser returns (uint256) {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    return titleData[_title].time;
+  }
+
+  function getIpfsAfterTitle(bytes32 _title) public onlyExistingUser returns (string) {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    // Make the transaction fee first
+    require (tokenContract.transfer(msg.sender, titleData[_title].publisher, accessFee));
+    return titleData[_title].ipfsHash;
+  }
+
+  function votePopularity(bytes32 _title) public onlyExistingUser returns (uint256) {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    // Make the transaction fee first
+    require (tokenContract.transfer(msg.sender, titleData[_title].publisher, popularityFee));
+    return ++titleData[_title].popularity;
+  }
+
+  // ~~~Search after Title~~~
+
+  // ~~~Search after Address~~~
+
+  // ~~~Search after Address~~~
+
   function getTimestamp() internal view returns (uint256) {
     return now;
   }
@@ -100,6 +152,7 @@ contract EduScience is Accessible {
   }
 
   // ----------------    IPFS final part   ---------------- //
+  
   // ---------------- Aunthentication part ---------------- //
 
   function login() public constant onlyExistingUser returns (bytes32) {

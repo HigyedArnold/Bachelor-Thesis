@@ -8,13 +8,13 @@ import "./EduScienceToken.sol";
 contract EduScienceTokenSale is Accessible {
 	
 	address admin;
-	EduScienceToken public tokenContract;
+	EduScienceToken private tokenContract;
 	uint256 public tokensAvailable;
 	uint256 public tokenPrice;
 	uint256 public tokensSold;
 	uint256 public deadline;
 	bool public saleClosed = false;
-	bool endSaleOnce = false;
+	bool private endSaleOnce = false;
 
 	// _; -> The function body where the modifier is used.
 	// Can be use onlyOwner from Ownable.

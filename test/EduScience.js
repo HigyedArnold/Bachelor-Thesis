@@ -1,8 +1,9 @@
 var EduScience = artifacts.require("./EduScience.sol");
+var title;
 
 contract('EduScience', function(accounts) {
 
-  it("EduScience: Authentication and simple publish test\\/", function() {
+  it("Authentication, publish and search after title test\\/", function() {
     return EduScience.deployed().then(function(instance) {
       eduScienceInstance = instance;
       return eduScienceInstance.signup("test", {from: accounts[0]});
@@ -15,7 +16,26 @@ contract('EduScience', function(accounts) {
       return eduScienceInstance.titlesCount();
     }).then(function(count) {
       assert.equal(count.toNumber(), 1, "The user test published one work!");
+      return eduScienceInstance.getTitle(count.toNUmber - 1);
+    }).then(function(result) {
+      title = result;
+      assert.equal(web3.toUtf8(title), "Test", "Title of the published work mathes!");
+      return eduScienceInstance.getPublisher(title);
+    }).then(function(publisher) {
+      assert.equal(publisher, accounts[0], "Account 0 is the publisher!");
+      return eduScienceInstance.getPopularity(title);
+    }).then(function(popularity) {
+      assert.equal(popularity.toNumber(), 0, "Initial popularity is 0!");
+      return eduScienceInstance.getPublishTime(title);
+    }).then(function(time) {
+      assert.notEqual(time.toNumber(), 0, "Time is: " + time.toNumber());
+      return eduScienceInstance.getIpfsAfterTitle.call(title, {from:accounts[0]});
+    }).then(function(ipfs) {
+      assert.equal(ipfs, "QMTest", "IPFS hash stored correctly!");
+      return eduScienceInstance.votePopularity.call(title, {from: accounts[0]})
+    }).then(function(popularity) {
+      assert.equal(popularity.toNumber(), 1, "Popularity is: " + popularity.toNumber());
     })
   });
-    
+
 });

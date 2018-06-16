@@ -107,7 +107,7 @@ class TransferForm extends Component {
     }).watch(function(error, event) {
       if (event.args._from === coinbase) {
         //console.log("Transfer event triggered: ", event)
-        containerInstance.setState({balance: event.args._balance})
+        containerInstance.initToken()
         containerInstance.setState({amount: ''})
         containerInstance.setState({toAddress: ''})
         containerInstance.setState({apamount: ''})

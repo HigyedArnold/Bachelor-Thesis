@@ -3,7 +3,7 @@ var EduScienceToken = artifacts.require("./EduScienceToken.sol");
 contract("EduScienceToken", function(accounts) {
   var tokenInstance;
 
-	it("EduScienceToken: Contract properties test\\/", function() {
+	it("Contract properties test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.name();
@@ -18,7 +18,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("EduScienceToken: Total supply test\\/", function() {
+	it("Total supply test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
@@ -30,7 +30,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("EduScienceToken: Transaction test\\/", function() {
+	it("Transaction test\\/", function() {
 		return EduScienceToken.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.transfer.call(accounts[1], 999999999);
@@ -55,7 +55,7 @@ contract("EduScienceToken", function(accounts) {
 		});
 	});
 
-	it("EduScienceToken: Delegated transaction approval test\\/", function() {
+	it("Delegated transaction approval test\\/", function() {
     	return EduScienceToken.deployed().then(function(instance) {
     		tokenInstance = instance;
      		return tokenInstance.approve.call(accounts[1], 100);
@@ -74,7 +74,7 @@ contract("EduScienceToken", function(accounts) {
     	});
   	});
 
-	it("EduScienceToken: Delegated transaction test\\/", function() {
+	it("Delegated transaction test\\/", function() {
     	return EduScienceToken.deployed().then(function(instance) {
       		tokenInstance = instance;
       		fromAccount = accounts[7];

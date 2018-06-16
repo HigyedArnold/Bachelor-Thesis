@@ -11,15 +11,15 @@ contract("EduScienceSale", function(accounts) {
   	var tokensAmount;
     var days = 1;
 
-  	it("EduScienceSale: EduScienceSale contract test\\/", function() {
+  	it("EduScienceSale contract test\\/", function() {
    		return EduScienceSale.deployed().then(function(instance) {
       	tokenSaleInstance = instance;
       	return tokenSaleInstance.address;
     }).then(function(address) {
       	assert.notEqual(address, 0x0, "EduScienceSale address is not 0x0!");
-      	return tokenSaleInstance.tokenContract();
-    }).then(function(address) {
-      	assert.notEqual(address, 0x0, "EduScience address is not 0x0!");
+    //   	return tokenSaleInstance.tokenContract(); Made private
+    // }).then(function(address) {
+    //   	assert.notEqual(address, 0x0, "EduScience address is not 0x0!");
       	return tokenSaleInstance.tokenPrice();
     }).then(function(price) {
       	assert.equal(price.toNumber(), tokenPrice, "Token price set correctly!");
@@ -32,7 +32,7 @@ contract("EduScienceSale", function(accounts) {
     });
   	});
 
- 	it("EduScienceSale: Token aquisition test\\/", function() {
+ 	it("Token aquisition test\\/", function() {
     	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
       	return EduScienceSale.deployed();
@@ -67,7 +67,7 @@ contract("EduScienceSale", function(accounts) {
     	});
   	});
 
-  	it("EduScienceSale: Token sale end test\\/", function() {
+  	it("Token sale end test\\/", function() {
     	return EduScience.deployed().then(function(instance) {
       	tokenInstance = instance;
       	return EduScienceSale.deployed();

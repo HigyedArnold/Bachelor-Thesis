@@ -19,4 +19,23 @@ contract EduScienceToken is ERC20Token {
 		balanceOf[msg.sender] = _initialSupply;
 	}
 
+	// Same as the normal transfer, but this is for interior usage, fee perception.
+	function transfer(address _from, address _to, uint256 _value) public returns (bool success){
+		// Have sufficient funds.
+		require (balanceOf[_from] >= _value);
+		// Transfer amount must be greater than 0.
+		require (_value > 0);
+		// Overflow check.
+		require (balanceOf[_to] + _value > balanceOf[_to]);
+		
+		balanceOf[_from] -= _value;
+		balanceOf[_to] += _value;
+
+		require (balanceOf[_to] != 0);
+
+		emit Transfer(_from, _to, _value, balanceOf[_from]);
+
+		return true;
+	}
+
 }

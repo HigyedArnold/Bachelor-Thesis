@@ -74,7 +74,7 @@ class ICOSaleForm extends Component {
       containerInstance.setState({tokensSold: event.args._tokensSold.toNumber()})
       containerInstance.setState({tokensAvailable: event.args._tokensAvailable.toNumber()})
       if (event.args._buyer === containerInstance.state.address) {
-        containerInstance.setState({balance: event.args._balance.toNumber()})
+        containerInstance.initToken()
       }
       containerInstance.setState({amount: ''})
       containerInstance.render()
