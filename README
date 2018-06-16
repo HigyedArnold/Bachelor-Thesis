@@ -1,11 +1,16 @@
+Sale account to be initialized with funds:
+
 truffle console
 EduScienceTokenSale.deployed().then(function(i) {tokenSale=i;});
 EduScienceToken.deployed().then(function(i) {token = i;});
 tokensAvailable = 750000; admin = web3.eth.accounts[0];
 token.transfer(tokenSale.address, tokensAvailable, {from: admin});
+.exit
 
 -> accounts[0] is the deployer of the contracts, gets all the allocated coins!
 
-TODO: 
-1) make overflow verifications for the input fields on both sides
-2) add more tests
+Test series:
+QmdPSVsN9bcsAyZTJaKYPJBhjGswts7RhrcJife66sD9C2 -> Linked
+
+bytes32 -> string/data over 32 characters are dropped in Solidity -> no security measures are needed for it.
+Contracts were designed to check for overflow.

@@ -6,7 +6,7 @@ contract Accessible is Killable {
 
  	// Mapping the accounts.
     mapping(address => bool) public allowedAccounts;
-    uint public numberOfAccounts;
+    uint256 public numberOfAccounts;
 
     event AccessGranted(address newAccount);
     event AccessRemoved(address removedAccount);
@@ -27,6 +27,8 @@ contract Accessible is Killable {
         require(newAccount != address(0) && !allowedAccounts[newAccount]);
         allowedAccounts[newAccount] = true;
         numberOfAccounts += 1;
+
+        require(numberOfAccounts != 0);
         // Emit event
         emit AccessGranted(newAccount);
     }
@@ -34,6 +36,7 @@ contract Accessible is Killable {
     function removeAccess(address removeAccount) public onlyOwnerOrAllowed {
     	// Check if already granted
         require(allowedAccounts[removeAccount]);
+        require (numberOfAccounts >= 1);
         allowedAccounts[removeAccount] = false;
         numberOfAccounts -= 1;
         // Emit event

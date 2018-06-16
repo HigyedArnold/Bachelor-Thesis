@@ -72,7 +72,7 @@ class PublishForm extends Component {
         <form className="pure-form pure-form-stacked" onSubmit={this.onSubmit.bind(this)}>
           <br />
           <label>Title:</label>
-          <input id="title" type="text" pattern="[A-Z][A-Za-z0-9 ]*" onChange={this.onInputChange.bind(this)} placeholder="Title" />
+          <input id="title" type="text" pattern="[A-Z][A-Za-z0-9 ]{0,31}" onChange={this.onInputChange.bind(this)} placeholder="Title" />
           <br />
           <h3>Choose your pdf file.</h3>
           <input id="file" type="file" accept="application/pdf" onChange={this.uploadFile.bind(this)} />

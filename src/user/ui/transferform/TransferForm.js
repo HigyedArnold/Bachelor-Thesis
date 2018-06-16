@@ -128,7 +128,7 @@ class TransferForm extends Component {
             <label>Your balance is: <strong>{this.state.balance}</strong> ESc.</label>
             <label>Transfer X amount of ESc tokens to 0xX account from your account.</label>
             <label>Amount to transfer:</label>
-            <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onAmountInputChange.bind(this)} />
+            <input id="amount" type="text" pattern="[1-9][0-9]{0,77}" value={this.state.amount} onChange={this.onAmountInputChange.bind(this)} />
             <br />
             <label>To address:</label>
             <input id="toAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.toAddress} onChange={this.onToAddressInputChange.bind(this)} />
@@ -142,7 +142,7 @@ class TransferForm extends Component {
           <fieldset>
             <label>Approve X amount of ESc tokens for 0xX account to spend from your account.</label>
             <label>Amount to approve:</label>
-            <input id="apamount" type="text" pattern="[1-9][0-9]*" value={this.state.apamount} onChange={this.onApAmountInputChange.bind(this)} />
+            <input id="apamount" type="text" pattern="[1-9][0-9]{0,77}" value={this.state.apamount} onChange={this.onApAmountInputChange.bind(this)} />
             <br />
             <label>For address:</label>
             <input id="apAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.apAddress} onChange={this.onApAddressInputChange.bind(this)} />
@@ -156,7 +156,7 @@ class TransferForm extends Component {
           <fieldset>
             <label>Transfer X amount of ESc tokens to 0xX account from 0xY account.</label>
             <label>Amount to transfer:</label>
-            <input id="framount" type="text" pattern="[1-9][0-9]*" value={this.state.framount} onChange={this.onFrAmountInputChange.bind(this)} />
+            <input id="framount" type="text" pattern="[1-9][0-9]{0,77}" value={this.state.framount} onChange={this.onFrAmountInputChange.bind(this)} />
             <br />
             <label>From address:</label>
             <input id="frAddress" type="text" pattern="0x[0-9A-Za-z]{40}" value={this.state.frAddress} onChange={this.onFrAddressInputChange.bind(this)} />

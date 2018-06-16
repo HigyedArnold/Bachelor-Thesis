@@ -52,7 +52,7 @@ contract EduScienceTokenSale is Accessible {
 		address recipient,
 		uint256 tokensSold);
 
-	constructor(EduScienceToken _tokenContract, uint256 _tokensAvailable, uint256 _tokenPrice, uint256 _days) public {
+	constructor(EduScienceToken _tokenContract, uint256 _tokensAvailable, uint256 _tokenPrice, uint256 _days) public {		
 		// Assign an admin
 		admin = msg.sender;
 		// Token contract
@@ -63,6 +63,7 @@ contract EduScienceTokenSale is Accessible {
 		tokensSold = 0;
 		// Time when the token sale ends
 		deadline = now + _days * 1 days;
+		require (deadline != 0);
 	}
 
 	// Buy tokens used by the client side only while sale is open.
@@ -76,6 +77,8 @@ contract EduScienceTokenSale is Accessible {
 		tokensAvailable -= _tokenAmount;
 		// Keep track of the sold tokens
 		tokensSold += _tokenAmount;
+
+		require (tokensSold != 0);
 		// Trigger Sell event
 		emit Sell(msg.sender, _tokenAmount, tokensSold, tokensAvailable, tokenContract.balanceOf(msg.sender));
 	}
@@ -98,6 +101,8 @@ contract EduScienceTokenSale is Accessible {
 	// Functions can be declared pure in which case they promise not to read from or modify the state.
 	// internal -> visible only inside the contract.
 	// pure -> not reading or writing data to the blockchain.
+
+	// Considering it secure from overflow.
 	function mul(uint x, uint y) internal pure returns (uint z) {
 		require(y == 0 || (z = x * y) / y == x);
 	}

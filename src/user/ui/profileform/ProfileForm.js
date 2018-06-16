@@ -30,7 +30,7 @@ class ProfileForm extends Component {
       <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit.bind(this)}>
         <fieldset>
           <label htmlFor="name">Name</label>
-          <input id="name" type="text" value={this.state.name} pattern="[A-Z][A-Za-z0-9 ]*" onChange={this.onInputChange.bind(this)} placeholder="Name" />
+          <input id="name" type="text" value={this.state.name} pattern="[A-Z][A-Za-z0-9 ]{0,31}" onChange={this.onInputChange.bind(this)} placeholder="Name" />
           <span className="pure-form-message">This is a required field.</span>
 
           <br />

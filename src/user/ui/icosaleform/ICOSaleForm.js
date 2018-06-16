@@ -92,7 +92,7 @@ class ICOSaleForm extends Component {
             <label>The sale contract address: <strong>{this.state.contractAddress}</strong></label>
             <br />
             <label htmlFor="name">Amount to buy:</label>
-            <input id="amount" type="text" pattern="[1-9][0-9]*" value={this.state.amount} onChange={this.onInputChange.bind(this)} />
+            <input id="amount" type="text" pattern="[1-9][0-9]{0,77}" value={this.state.amount} onChange={this.onInputChange.bind(this)} />
             <br />
             <button type="submit" className="pure-button pure-button-primary">Buy Tokens</button>
             <br />

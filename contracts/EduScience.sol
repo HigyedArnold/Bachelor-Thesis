@@ -67,10 +67,12 @@ contract EduScience is Accessible {
 
   function publish(string _ipfsHash, bytes32 _title) public onlyValidName(_title) onlyExistingUser {
     require (bytes(_ipfsHash).length < 50);
-    require (_title.length < 50);
 
     uint256 n = ++addressCount[msg.sender];
     titlesCount++;
+
+    require (n != 0);
+    require (titlesCount != 0);
 
     addressData[msg.sender][n].ipfsHash = _ipfsHash;
     addressData[msg.sender][n].publisher = msg.sender;
