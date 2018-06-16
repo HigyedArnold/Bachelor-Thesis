@@ -7,7 +7,7 @@ contract("EduScienceSale", function(accounts) {
   	var admin = accounts[0];
   	var buyer = accounts[1];
  	  var tokenPrice = 1000000000000000; // Wei = 0.001 Ether
-  	var tokensAvailable = 750000;
+  	var tokensAvailable = 7500000;
   	var tokensAmount;
     var days = 1;
 
@@ -61,7 +61,7 @@ contract("EduScienceSale", function(accounts) {
       return tokenSaleInstance.buyTokens(tokensAmount, {from: buyer, value: 1 });
     }).then(assert.fail).catch(function(error) {
       	assert(error.message.indexOf("revert") >= 0, "msg.value must be equal with the number of tokens in Wei!");
-      	return tokenSaleInstance.buyTokens(999999, {from: buyer, value: tokensAmount * tokenPrice });
+      	return tokenSaleInstance.buyTokens(99999999, {from: buyer, value: tokensAmount * tokenPrice });
     }).then(assert.fail).catch(function(error) {
       	assert(error.message.indexOf("revert") >= 0, "Buying more tokens than available is not permitted!");
     	});

@@ -17,7 +17,7 @@ module.exports = function(deployer) {
   deployer.link(Accessible, EduScience);
   deployer.link(Accessible, EduScienceToken);
   // Assure in a promise that it will be created after the EduScienceToken
-  deployer.deploy(EduScienceToken, 1000000).then(function() {
+  deployer.deploy(EduScienceToken, 100000000).then(function() {
     return deployer.deploy(EduScience, EduScienceToken.address).then(function(){
     	// 1000000000000000 Wei = 0.001 Ether
     	// Check: https://etherconverter.online/

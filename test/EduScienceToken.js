@@ -23,10 +23,10 @@ contract("EduScienceToken", function(accounts) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
 		}).then(function(totalSupply) {
-			assert.equal(totalSupply.toNumber(), 1000000, "Sets the total supply to 1.000.000!");
+			assert.equal(totalSupply.toNumber(), 100000000, "Sets the total supply to 100.000.000!");
 			return tokenInstance.balanceOf(accounts[0]);
 		}).then(function(adminBalance) {
-			assert.equal(adminBalance.toNumber(), 1000000, "Initial supply allocated to admin account!");
+			assert.equal(adminBalance.toNumber(), 100000000, "Initial supply allocated to admin account!");
 		});
 	});
 
@@ -36,22 +36,22 @@ contract("EduScienceToken", function(accounts) {
 			return tokenInstance.transfer.call(accounts[1], 999999999);
 		}).then(assert.fail).catch(function(error) {
 			assert(error.message.indexOf("revert") >= 0, "Error message must contain: revert!");
-			return tokenInstance.transfer.call(accounts[1], 250000, {from: accounts[0] });
+			return tokenInstance.transfer.call(accounts[1], 25000000, {from: accounts[0] });
 		}).then(function(success) {
 			assert.equal(success, true, "Transfer succesfull!");
-			return tokenInstance.transfer(accounts[1], 250000, {from: accounts[0] });
+			return tokenInstance.transfer(accounts[1], 25000000, {from: accounts[0] });
 		}).then(function(receipt) {
 			 assert.equal(receipt.logs.length, 1, "Event triggered!");
       		 assert.equal(receipt.logs[0].event, "Transfer", "Expecting Transfer event!");
       		 assert.equal(receipt.logs[0].args._from, accounts[0], "From address!");
       		 assert.equal(receipt.logs[0].args._to, accounts[1], "To address!");
-      		 assert.equal(receipt.logs[0].args._value, 250000, "Transfer amount!");
+      		 assert.equal(receipt.logs[0].args._value, 25000000, "Transfer amount!");
 			return tokenInstance.balanceOf(accounts[1]);
 		}).then(function(balance) {
-			assert.equal(balance.toNumber(), 250000, "Transfer test!");
+			assert.equal(balance.toNumber(), 25000000, "Transfer test!");
 			return tokenInstance.balanceOf(accounts[0]);
 		}).then(function(balance) {
-			assert.equal(balance.toNumber(), 750000, "Transfer test!");
+			assert.equal(balance.toNumber(), 75000000, "Transfer test!");
 		});
 	});
 
