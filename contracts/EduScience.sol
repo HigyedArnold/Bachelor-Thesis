@@ -70,7 +70,10 @@ contract EduScience is Accessible {
 
   function publish(string _ipfsHash, bytes32 _title) public onlyValidName(_title) onlyExistingUser {
     require (bytes(_ipfsHash).length < 50);
-    // on entry 0 nothing stored!
+    // Must be an empty slot
+    require (titleData[_title].time == 0);
+
+    // on entry 0 nothing stored
     uint256 n = ++addressCount[msg.sender];
     titlesCount++;
 
@@ -141,6 +144,11 @@ contract EduScience is Accessible {
 
   // ~~~Search after Address~~~
 
+  function getTitleAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
+    require (addressData[msg.sender][_index].time != 0);
+    return addressData[msg.sender][_index].title;
+  }
+
   // ~~~Search after Address~~~
 
   function getTimestamp() internal view returns (uint256) {
@@ -152,7 +160,7 @@ contract EduScience is Accessible {
   }
 
   // ----------------    IPFS final part   ---------------- //
-  
+
   // ---------------- Aunthentication part ---------------- //
 
   function login() public constant onlyExistingUser returns (bytes32) {
