@@ -7,7 +7,7 @@ contract("EduScienceSale", function(accounts) {
   	var admin = accounts[0];
   	var buyer = accounts[1];
  	  var tokenPrice = 1000000000000000; // Wei = 0.001 Ether
-  	var tokensAvailable = 7500000;
+  	var tokensAvailable = 75000000;
   	var tokensAmount;
     var days = 1;
 

@@ -22,7 +22,7 @@ module.exports = function(deployer) {
     	// 1000000000000000 Wei = 0.001 Ether
     	// Check: https://etherconverter.online/
     	var tokenPrice = 1000000000000000;
-      var tokensAvailable = 750000;
+      var tokensAvailable = 75000000;
     	var days = 1;
       deployer.link(Accessible, EduScienceTokenSale);
     	return deployer.deploy(EduScienceTokenSale, EduScienceToken.address, tokensAvailable, tokenPrice, days).then(function() {
