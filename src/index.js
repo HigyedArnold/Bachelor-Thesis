@@ -18,6 +18,7 @@ import SignUp from './user/layouts/signup/SignUp'
 import ICOSale from './user/layouts/icosale/ICOSale'
 import Transfer from './user/layouts/transfer/Transfer'
 import Publish from './user/layouts/publish/Publish'
+import Search from './user/layouts/search/Search'
 import Profile from './user/layouts/profile/Profile'
 
 // Redux Store
@@ -71,6 +72,7 @@ ReactDOM.render((
           <Route path="icosale" component={UserIsAuthenticated(ICOSale)} />
           <Route path="transfer" component={UserIsAuthenticated(Transfer)} />
           <Route path="publish" component={UserIsAuthenticated(Publish)} />
+          <Route path="search" component={UserIsAuthenticated(Search)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
         </Route>
