@@ -58,6 +58,7 @@ class ICOSaleForm extends Component {
     let containerInstance = this
     let contractTokenInstance = store.getState().tokenContract.tokenContract
     contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
+      debugger
       if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }

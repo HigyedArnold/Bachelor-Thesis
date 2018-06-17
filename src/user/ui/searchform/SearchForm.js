@@ -172,7 +172,7 @@ class SearchForm extends Component {
     let coinbase = store.getState().address.address
     const size = end - start
     let containerInstance = this
-    return Promise.all(containerInstance.range(start, end).map((index,count) => {
+    return Promise.all(containerInstance.range(start, end, choice).map((index,count) => {
       debugger
       if (choice === 1) {
         return instance.getTitle(index, {from: coinbase})
@@ -196,10 +196,14 @@ class SearchForm extends Component {
     }
   }
 
-  range(start, end) {
+  range(start, end, choice) {
     if (typeof end === 'undefined'){
       end = start
       start = 0
+    }
+    if (choice > 1) {
+      start = 1
+      end++
     }
     var result = []
     for (var i = start; i < end; i++){ 
@@ -213,8 +217,22 @@ class SearchForm extends Component {
  render() {
   let selectedData = this.state.selectedData
 
-  const titleContent = this.state.titleChecked
-  ? <div ref="ref">
+  return (
+    <div ref="ref" className="pure-form pure-form-stacked">
+      <h3>Choose an option after which you want to search for articles.</h3>
+      <p>Accessing information about article is free. 
+      If you want to acces it's content, purchase it once for <strong>6 ESc</strong> tokens and you are good to go. 
+      If you like the article, you can increase it's rating by liking it. The higher the popularity, the better the content. 
+      It costs <strong>2 ESc</strong> tokens. 
+      Also, you can make donations to the publishers address by going to the Transfer section.</p>
+      <label>After title: </label>
+      <input type="checkbox" checked={ this.state.titleChecked } onChange={ this.handleTitleChange.bind(this) } />
+      <br/ >
+      <label>Your own: </label>
+      <input type="checkbox" checked={ this.state.addressChecked } onChange={ this.handleAddressChange.bind(this) } /> 
+      <br/ >
+      <label>Purchased: </label>
+      <input type="checkbox" checked={ this.state.purchasedChecked } onChange={ this.handlePurchasedChange.bind(this) } /> 
       <FilteredMultiSelect onChange={this.handleSelectionChange} options={this.state.data} selectedOptions={selectedData} textProp="name" valueProp="id"/>
       {selectedData.length === 0}
       {selectedData.length > 0 && <ul>
@@ -233,36 +251,6 @@ class SearchForm extends Component {
                                           Like</button>
                                           </li>)}
       </ul>}
-    </div>
-  : null;
-
-  const addressContent = this.state.addressChecked
-  ? titleContent
-  : null
-
-  const purchasedContent = this.state.purchasedChecked
-  ? titleContent
-  : null
-
-  return (
-    <div ref="ref" className="pure-form pure-form-stacked">
-      <h3>Choose an option after which you want to search for articles.</h3>
-      <p>Accessing information about article is free. 
-      If you want to acces it's content, purchase it once for <strong>6 ESc</strong> tokens and you are good to go. 
-      If you like the article, you can increase it's rating by liking it. The higher the popularity, the better the content. 
-      It costs <strong>2 ESc</strong> tokens. 
-      Also, you can make donations to the publishers address by going to the Transfer section.</p>
-      <label>After title: </label>
-      <input type="checkbox" checked={ this.state.titleChecked } onChange={ this.handleTitleChange.bind(this) } />
-      <br/ >
-      <label>Your own: </label>
-      <input type="checkbox" checked={ this.state.addressChecked } onChange={ this.handleAddressChange.bind(this) } /> 
-      <br/ >
-      <label>Purchased: </label>
-      <input type="checkbox" checked={ this.state.purchasedChecked } onChange={ this.handlePurchasedChange.bind(this) } /> 
-      { titleContent }
-      { addressContent }
-      { purchasedContent }
       <br />
       <label>IPFS address: {this.state.ipfsHash}</label>
       <label>Publisher: {this.state.publisher}</label>

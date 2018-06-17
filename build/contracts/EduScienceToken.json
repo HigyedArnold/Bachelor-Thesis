@@ -442,8 +442,8 @@
           }
         ],
         "contractDependencies": [
-          319,
           121,
+          319,
           1301,
           1317,
           1358
@@ -1799,8 +1799,8 @@
           }
         ],
         "contractDependencies": [
-          319,
           121,
+          319,
           1301,
           1317,
           1358
@@ -3206,10 +3206,10 @@
         }
       },
       "links": {},
-      "address": "0x912c57eb7af31e8a5abddbe04ee0052326fda85e",
-      "transactionHash": "0x662289eadf57f27573c9f09834e5a71d06a3721e223ecc76bd816b050fb09e5d"
+      "address": "0x7e14b58feb0416132c1071e6170044919b1dd934",
+      "transactionHash": "0x380280298d739758539c4543aa02afb4af4f0c362471d55633b9471b90a36478"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-17T19:30:16.888Z"
+  "updatedAt": "2018-06-17T21:43:14.282Z"
 }

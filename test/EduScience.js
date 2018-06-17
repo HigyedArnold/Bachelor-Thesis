@@ -136,6 +136,36 @@ contract('EduScience', function(accounts) {
       return eduScienceInstance.getIpfsAfterTitle("Test22", {from:accounts[0]});
     }).then(function(ipfs) {
       assert.equal(ipfs, "QMTest22", "IPFS hash stored correctly!");
+      return eduScienceInstance.userPurchasedCount(accounts[0]);
+    }).then(function(count) {
+      assert.equal(count.toNumber(), 2, "2 items purchased!");
+      return eduScienceInstance.addressCount(accounts[0]);
+    }).then(function(count) {
+      assert.equal(count.toNumber(), 4, "4 items published!");
+       return eduScienceInstance.userPurchasedCount(accounts[1]);
+    }).then(function(count) {
+      assert.equal(count.toNumber(), 0, "0 items purchased!");
+      return eduScienceInstance.addressCount(accounts[1]);
+    }).then(function(count) {
+      assert.equal(count.toNumber(), 2, "2 items published!");
+      return eduScienceInstance.getPurchaseAddress(1,{from:accounts[0]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test21", "Get article 1 from account 0!");
+      return eduScienceInstance.getPurchaseAddress(2,{from:accounts[0]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test22", "Get article 2 from account 0!");
+      return eduScienceInstance.getTitleAddress(3,{from:accounts[0]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test11", "Get article 1 from account 0!");
+      return eduScienceInstance.getTitleAddress(4,{from:accounts[0]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test12", "Get article 2 from account 0!");
+      return eduScienceInstance.getTitleAddress(1,{from:accounts[1]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test21", "Get article 1 from account 1!");
+      return eduScienceInstance.getTitleAddress(2,{from:accounts[1]});
+    }).then(function(title) {
+      assert.equal(web3.toUtf8(title), "Test22", "Get article 2 from account 1!");
     })
   });
 
