@@ -22,7 +22,6 @@ class ProfileForm extends Component {
     }
     this.props.onProfileFormSubmit(this.state.name)
     this.setState({name: ''})
-    this.render()
   }
 
   render() {

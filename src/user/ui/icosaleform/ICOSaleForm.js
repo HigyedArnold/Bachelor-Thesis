@@ -49,6 +49,8 @@ class ICOSaleForm extends Component {
           containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
         })
       })
+    }).catch(function(error) {
+      // ERROR
     })
   }
 
@@ -59,6 +61,8 @@ class ICOSaleForm extends Component {
       if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }
+    }).catch(function(error) {
+      // ERROR
     })
   }
 
@@ -77,7 +81,6 @@ class ICOSaleForm extends Component {
         containerInstance.initToken()
       }
       containerInstance.setState({amount: ''})
-      containerInstance.render()
     })
   }
 

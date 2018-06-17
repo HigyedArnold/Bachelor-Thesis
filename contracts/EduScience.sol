@@ -30,6 +30,8 @@ contract EduScience is Accessible {
   EduScienceToken private tokenContract;
 
   mapping (address => User) public users;
+  mapping (address => mapping (uint256 => Data)) userPurchasedData;
+  mapping (address => uint256) userPurchasedCount;
 
   // A
   // 1 address -> 1,2,...n -> data1,data2,...datan
@@ -91,7 +93,6 @@ contract EduScience is Accessible {
     titleData[_title].title = _title;
     titleData[_title].popularity = 0;
     titleData[_title].time = getTimestamp();
-
     titles.push(_title);
 
     emit Store(msg.sender, _ipfsHash);
@@ -124,21 +125,59 @@ contract EduScience is Accessible {
     return titleData[_title].time;
   }
 
-  function getIpfsAfterTitle(bytes32 _title) public onlyExistingUser returns (string) {
+  function purchaseIpfsAfterTitle(bytes32 _title) public onlyExistingUser {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
-    // Make the transaction fee first
+    // Why to buy your own work
+    require (titleData[_title].publisher != msg.sender);
+
+    // Check if not already purchased
+    for (uint256 i = 0; i < userPurchasedCount[msg.sender]; i++) {
+      // Title must be different, a new one.
+      require (userPurchasedData[msg.sender][i].title != _title);
+    }
+
+    // Make the transaction fee 
     require (tokenContract.transfer(msg.sender, titleData[_title].publisher, accessFee));
-    return titleData[_title].ipfsHash;
+    uint256 n = ++userPurchasedCount[msg.sender];
+    userPurchasedData[msg.sender][n].ipfsHash = titleData[_title].ipfsHash;
+    userPurchasedData[msg.sender][n].publisher = titleData[_title].publisher;
+    userPurchasedData[msg.sender][n].title = titleData[_title].title;
+    userPurchasedData[msg.sender][n].popularity = titleData[_title].popularity;
+    userPurchasedData[msg.sender][n].time = titleData[_title].time;
   }
 
-  function votePopularity(bytes32 _title) public onlyExistingUser returns (uint256) {
+  function getIpfsAfterTitle(bytes32 _title) public constant onlyExistingUser returns (string) {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
+    // Or purchased work
+    for (uint256 i = 1; i <= userPurchasedCount[msg.sender]; i++) {
+      if (userPurchasedData[msg.sender][i].title == _title) {
+        return userPurchasedData[msg.sender][i].ipfsHash;
+      }
+    }
+    // Or own work
+    for (uint256 j = 1; j <= addressCount[msg.sender]; j++) {
+      if (addressData[msg.sender][j].title == _title) {
+        return addressData[msg.sender][j].ipfsHash;
+      }
+    }
+    // Not available in any
+    return "NA";
+  }
+
+  function votePopularity(bytes32 _title) public onlyExistingUser {
+    // Check if data exists for this entry
+    require (titleData[_title].time != 0);
+    // Can't increase your own popularity
+    require (titleData[_title].publisher != msg.sender);
     // Make the transaction fee first
     require (tokenContract.transfer(msg.sender, titleData[_title].publisher, popularityFee));
-    return ++titleData[_title].popularity;
+
+    ++titleData[_title].popularity;
   }
+
+
 
   // ~~~Search after Title~~~
 

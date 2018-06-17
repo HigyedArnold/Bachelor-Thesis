@@ -94,6 +94,8 @@ class TransferForm extends Component {
       if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }
+    }).catch(function(error) {
+      // ERROR
     })
   }
 
@@ -115,7 +117,6 @@ class TransferForm extends Component {
         containerInstance.setState({framount: ''})
         containerInstance.setState({frAddress: ''})
         containerInstance.setState({frToAddress: ''})
-        containerInstance.render()
       }
     })
   }

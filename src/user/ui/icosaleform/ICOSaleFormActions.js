@@ -9,7 +9,8 @@ export function buyICO(amount) {
     contractSaleInstance.buyTokens(amount, {from: coinbase, value: amount * price, gas: 500000}).then(function(result) {
       console.log("Tokens bought: ", amount)
       swal('ICO purchased!', 'Transaction successful!','success')
-    }).catch(function(result) {
     })   
+  }).catch(function(error) {
+      // ERROR
   })
 }

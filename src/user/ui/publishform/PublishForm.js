@@ -61,7 +61,6 @@ class PublishForm extends Component {
         containerInstance.setState({url: 'https://gateway.ipfs.io/ipfs/' + event.args.ipfsHash})
         containerInstance.setState({buffer: ''})
         containerInstance.setState({title: ''})
-        containerInstance.render()
       }
     })
   }
