@@ -30,8 +30,9 @@ contract EduScience is Accessible {
   EduScienceToken private tokenContract;
 
   mapping (address => User) public users;
-  mapping (address => mapping (uint256 => Data)) userPurchasedData;
-  mapping (address => uint256) userPurchasedCount;
+  
+  mapping (address => mapping (uint256 => Data)) private userPurchasedData;
+  mapping (address => uint256) public userPurchasedCount;
 
   // A
   // 1 address -> 1,2,...n -> data1,data2,...datan
@@ -189,6 +190,15 @@ contract EduScience is Accessible {
   }
 
   // ~~~Search after Address~~~
+
+  // ~~~Search after Purchased~~~
+
+  function getPurchaseAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
+    require (userPurchasedData[msg.sender][_index].time != 0);
+    return userPurchasedData[msg.sender][_index].title;
+  }
+
+  // ~~~Search after Purchased~~~
 
   function getTimestamp() internal view returns (uint256) {
     return now;

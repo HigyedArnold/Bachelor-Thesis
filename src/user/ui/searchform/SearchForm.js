@@ -13,30 +13,40 @@ class SearchForm extends Component {
       selectedData: [],
       titleChecked: false,
       addressChecked: false,
+      purchasedChecked: false,
       publisher: '',
       popularity: '',
       time: '',
       ipfsHash: ''
     }
-    this.getTitles()
     //this.getDataSet()
   }
 
   handleTitleChange() {
     if (this.state.titleChecked === false) {
       this.setState({addressChecked: false})
+      this.setState({purchasedChecked: false})
+      this.setState({titleChecked: true})
+      this.getTitles(1)
     }
-    this.setState({titleChecked: !this.state.titleChecked})
   }
 
   handleAddressChange() {
     if (this.state.addressChecked === false) {
       this.setState({titleChecked: false})
+      this.setState({purchasedChecked: false})
+      this.setState({addressChecked: true})
+      this.getTitles(2)
     }
-    this.setState({addressChecked: !this.state.addressChecked})    
   }
 
-  onSubmit(event) {   
+  handlePurchasedChange() {
+    if (this.state.purchasedChecked === false) {
+      this.setState({titleChecked: false})
+      this.setState({addressChecked: false})
+      this.setState({purchasedChecked: true})
+      this.getTitles(3)
+    }
   }
 
   handleDeselect(index) {
@@ -132,12 +142,12 @@ class SearchForm extends Component {
   //   }),{}))
   // }
 
-  getTitles() {
+  getTitles(choice) {
     let web3 = store.getState().web3.web3Instance;
     let contractEduInstance = store.getState().eduContract.eduContract
     let titles = []
     let containerInstance = this
-    this.getTitleSet(contractEduInstance).then(result => {
+    this.getTitleSet(contractEduInstance, choice).then(result => {
       for (var i = 0; i < result.size; i++) {
         titles.push({id: i, name: web3.toUtf8(result.keys[i])})
         //console.log('Title: ', web3.toUtf8(result.keys[i]))
@@ -150,24 +160,40 @@ class SearchForm extends Component {
     })
   }
 
-  getTitleSet(instance) {
+  getTitleSet(instance, choice) {
     let containerInstance = this
-    return this.Iterator(instance).then(iterator => {
+    return this.Iterator(instance, choice).then(iterator => {
       const { size } = iterator
-      return containerInstance.getTitlesByIndex(0, size, instance)
+      return containerInstance.getTitlesByIndex(0, size, instance, choice)
     })
   }
 
-  getTitlesByIndex(start, end, instance) {
+  getTitlesByIndex(start, end, instance, choice) {
     let coinbase = store.getState().address.address
     const size = end - start
     let containerInstance = this
-    return Promise.all(containerInstance.range(start, end).map((index,count) => instance.getTitle(index, {from: coinbase})))
+    return Promise.all(containerInstance.range(start, end).map((index,count) => {
+      debugger
+      if (choice === 1) {
+        return instance.getTitle(index, {from: coinbase})
+      } else if (choice === 3) {
+        return instance.getPurchaseAddress(index, {from: coinbase})
+      } else {
+        return instance.getTitleAddress(index, {from: coinbase})
+      }
+    }))
     .then(keys => ({size, keys, instance}))
   }
 
-  Iterator(instance) {
-    return instance.titlesCount().then(count => count.toNumber()).then(size => ({ instance, size }))
+  Iterator(instance, choice) {
+    let coinbase = store.getState().address.address
+    if (choice === 1) {
+      return instance.titlesCount().then(count => count.toNumber()).then(size => ({ instance, size }))
+    } else if (choice === 3) {
+      return instance.userPurchasedCount.call(coinbase).then(count => count.toNumber()).then(size => ({ instance, size }))
+    } else {
+      return instance.addressCount.call(coinbase).then(count => count.toNumber()).then(size => ({ instance, size }))
+    }
   }
 
   range(start, end) {
@@ -188,49 +214,60 @@ class SearchForm extends Component {
   let selectedData = this.state.selectedData
 
   const titleContent = this.state.titleChecked
-  ? <div ref="ref" className="pure-form pure-form-stacked">
-        <FilteredMultiSelect onChange={this.handleSelectionChange} options={this.state.data} selectedOptions={selectedData} textProp="name" valueProp="id"/>
-        {selectedData.length === 0}
-        {selectedData.length > 0 && <ul>
-        {selectedData.map((selection, i) => <li key={selection.id}> {`${selection.name}`}
-                                            <button type="submit" className="pure-button pure-button-primary" 
-                                            onClick={() => this.handleDeselect(i)}>
-                                            Remove</button>
-                                            <button type="submit" className="pure-button pure-button-primary" 
-                                            onClick={() => this.handleShowInfo(selection.name)}>
-                                            Show info</button>
-                                            <button type="submit" className="pure-button pure-button-primary" 
-                                            onClick={() => this.handleShowIPFS(selection.name)}>
-                                            Purchase</button>
-                                            <button type="submit" className="pure-button pure-button-primary" 
-                                            onClick={() => this.handleLike(selection.name)}>
-                                            Like</button>
-                                            </li>)}
-        </ul>}
-        <br />
-        <label>IPFS address: {this.state.ipfsHash}</label>
-        <label>Publisher: {this.state.publisher}</label>
-        <label>Popularity: {this.state.popularity}</label>
-        <label>Publish time: {this.state.time}</label>
+  ? <div ref="ref">
+      <FilteredMultiSelect onChange={this.handleSelectionChange} options={this.state.data} selectedOptions={selectedData} textProp="name" valueProp="id"/>
+      {selectedData.length === 0}
+      {selectedData.length > 0 && <ul>
+      {selectedData.map((selection, i) => <li key={selection.id}> {`${selection.name}`}
+                                          <button type="submit" className="pure-button pure-button-primary" 
+                                          onClick={() => this.handleDeselect(i)}>
+                                          Remove</button>
+                                          <button type="submit" className="pure-button pure-button-primary" 
+                                          onClick={() => this.handleShowInfo(selection.name)}>
+                                          Show info</button>
+                                          <button type="submit" className="pure-button pure-button-primary" 
+                                          onClick={() => this.handleShowIPFS(selection.name)}>
+                                          Purchase</button>
+                                          <button type="submit" className="pure-button pure-button-primary" 
+                                          onClick={() => this.handleLike(selection.name)}>
+                                          Like</button>
+                                          </li>)}
+      </ul>}
     </div>
   : null;
 
   const addressContent = this.state.addressChecked
-  ? <div> TODO </div>
+  ? titleContent
+  : null
+
+  const purchasedContent = this.state.purchasedChecked
+  ? titleContent
   : null
 
   return (
-    <div ref="ref">
-      <form className="pure-form pure-form-stacked">
-        <h3>Choose an option after which you want to search articles.</h3>
-        <label>After title: </label>
-        <input type="checkbox" checked={ this.state.titleChecked } onChange={ this.handleTitleChange.bind(this) } />
-        <br/ >
-        <label>After publisher: </label>
-        <input type="checkbox" checked={ this.state.addressChecked } onChange={ this.handleAddressChange.bind(this) } /> 
-      </form>
+    <div ref="ref" className="pure-form pure-form-stacked">
+      <h3>Choose an option after which you want to search for articles.</h3>
+      <p>Accessing information about article is free. 
+      If you want to acces it's content, purchase it once for <strong>6 ESc</strong> tokens and you are good to go. 
+      If you like the article, you can increase it's rating by liking it. The higher the popularity, the better the content. 
+      It costs <strong>2 ESc</strong> tokens. 
+      Also, you can make donations to the publishers address by going to the Transfer section.</p>
+      <label>After title: </label>
+      <input type="checkbox" checked={ this.state.titleChecked } onChange={ this.handleTitleChange.bind(this) } />
+      <br/ >
+      <label>Your own: </label>
+      <input type="checkbox" checked={ this.state.addressChecked } onChange={ this.handleAddressChange.bind(this) } /> 
+      <br/ >
+      <label>Purchased: </label>
+      <input type="checkbox" checked={ this.state.purchasedChecked } onChange={ this.handlePurchasedChange.bind(this) } /> 
       { titleContent }
       { addressContent }
+      { purchasedContent }
+      <br />
+      <label>IPFS address: {this.state.ipfsHash}</label>
+      <label>Publisher: {this.state.publisher}</label>
+      <label>Popularity: {this.state.popularity}</label>
+      <label>Publish time: {this.state.time}</label>
     </div>
   )
 }

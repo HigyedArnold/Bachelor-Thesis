@@ -8,7 +8,7 @@ class Search extends Component {
         <div className="pure-g">
           <div className="pure-u-1-1">
             <h1>Search</h1>
-            <p>Search for articles by name or publisher address.</p>
+            <p>Search for articles by name.</p>
             <SearchFormContainer />
           </div>
         </div>
