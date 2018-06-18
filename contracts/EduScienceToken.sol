@@ -38,5 +38,4 @@ contract EduScienceToken is ERC20Token {
 
 		return true;
 	}
-
 }

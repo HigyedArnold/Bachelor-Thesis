@@ -26,7 +26,7 @@ interface Token {
 
 	// @param _owner The address from which the balance will be retrieved.
 	// @return The balance of that account / address.
-	// function balanceOf(address _owner) external constant returns (uint256  balance)''
+	// function balanceOf(address _owner) external constant returns (uint256  balance);
 
 	// @notice Transfer '_value' token from 'msg.sender' to '_to'.
 	// @notice Emits Transfer event.
@@ -55,5 +55,4 @@ interface Token {
     // @param _spender The address of the account able to transfer the tokens.
     // @return Amount of remaining tokens allowed to be spent.
     // function allowance(address _owner, address _spender) external constant returns (uint256 remaining);
-
 }

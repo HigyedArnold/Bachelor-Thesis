@@ -42,6 +42,4 @@ contract Accessible is Killable {
         // Emit event
         emit AccessRemoved(removeAccount);
     }
-
-
 }

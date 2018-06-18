@@ -4,7 +4,6 @@ import "./Token.sol";
 import "./Accessible.sol";
 
 contract ERC20Token is Token, Accessible {
-
 	// Since the modifier is public, Solidity already provides a getter function for the variable. 
 	uint256 public totalSupply;
 
@@ -74,5 +73,4 @@ contract ERC20Token is Token, Accessible {
     // function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {}
     //   return allowance[_owner][_spender];
     // }
-
 }

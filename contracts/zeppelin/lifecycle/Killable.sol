@@ -8,5 +8,4 @@ contract Killable is Ownable {
   function kill() public onlyOwner {
     selfdestruct(owner);
   }
-
 }
