@@ -20,7 +20,8 @@ contract EduScienceToken is ERC20Token {
 	}
 
 	// Same as the normal transfer, but this is for interior usage, fee perception.
-	function transfer(address _from, address _to, uint256 _value) public returns (bool success){
+	// Major security breach: this function should be called only from other contracts => modifier onlyOwnerOrAllowed.
+	function transfer(address _from, address _to, uint256 _value) public onlyOwnerOrAllowed returns (bool success){
 		// Have sufficient funds.
 		require (balanceOf[_from] >= _value);
 		// Transfer amount must be greater than 0.

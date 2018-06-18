@@ -5,15 +5,13 @@ import "./EduScienceToken.sol";
 
 contract EduScience is Accessible {
 
-  // All state variables have an initial state!!!
+  // All state variables have an initial state
 
   struct User {
     bytes32 name;
   }
 
-  // ----------------    IPFS final part   ---------------- //
-
-  // title must be bytes to use it as a key for mapping, string is not supported
+  // Title must be bytes to use it as a key for mapping, string is not supported.
   struct Data {
     // The link to the stored data
     string ipfsHash;
@@ -21,7 +19,7 @@ contract EduScience is Accessible {
     address publisher;
     // Title of the data
     bytes32 title;
-    // Popularity, can be voted up/down
+    // Popularity, can be voted only up
     uint256 popularity;
     // For existence check
     uint256 time;
@@ -31,14 +29,13 @@ contract EduScience is Accessible {
 
   mapping (address => User) public users;
   
-  mapping (address => mapping (uint256 => Data)) private userPurchasedData;
-  mapping (address => uint256) public userPurchasedCount;
-
   // A
   // 1 address -> 1,2,...n -> data1,data2,...datan
   mapping (address => mapping (uint256 => Data)) private addressData;
+  mapping (address => mapping (uint256 => Data)) private userPurchasedData;
   // 1 address -> n
   mapping (address => uint256) public addressCount;
+  mapping (address => uint256) public userPurchasedCount;
   // 1 title -> 1 data
   
   // B
@@ -47,10 +44,11 @@ contract EduScience is Accessible {
   bytes32[] private titles;
   // Titles count
   uint256 public titlesCount;
+
   uint256 public accessFee = 6;
   uint256 public popularityFee = 2;
 
-  // bytes not supported for ipfsHash -> utf58 encoding, not utf8 provided by web3
+  // Bytes not supported for ipfsHash -> utf58 encoding, not utf8 provided by web3.
   event Store(
      address publisher,
      string ipfsHash);
@@ -76,7 +74,7 @@ contract EduScience is Accessible {
     // Must be an empty slot
     require (titleData[_title].time == 0);
 
-    // on entry 0 nothing stored
+    // On entry 0 nothing stored for maps
     uint256 n = ++addressCount[msg.sender];
     titlesCount++;
 
@@ -98,8 +96,6 @@ contract EduScience is Accessible {
 
     emit Store(msg.sender, _ipfsHash);
   }
-
-  // ~~~Search after Title~~~
 
   // For the list population.
   function getTitle(uint256 _index) constant public onlyExistingUser returns (bytes32) {
@@ -129,7 +125,7 @@ contract EduScience is Accessible {
   function purchaseIpfsAfterTitle(bytes32 _title) public onlyExistingUser {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
-    // Why to buy your own work
+    // Why to buy your own work?
     require (titleData[_title].publisher != msg.sender);
 
     // Check if not already purchased
@@ -163,7 +159,7 @@ contract EduScience is Accessible {
         return addressData[msg.sender][j].ipfsHash;
       }
     }
-    // Not available in any
+    // Not available
     return "NA";
   }
 
@@ -178,27 +174,15 @@ contract EduScience is Accessible {
     ++titleData[_title].popularity;
   }
 
-
-
-  // ~~~Search after Title~~~
-
-  // ~~~Search after Address~~~
-
   function getTitleAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
     require (addressData[msg.sender][_index].time != 0);
     return addressData[msg.sender][_index].title;
   }
 
-  // ~~~Search after Address~~~
-
-  // ~~~Search after Purchased~~~
-
   function getPurchaseAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
     require (userPurchasedData[msg.sender][_index].time != 0);
     return userPurchasedData[msg.sender][_index].title;
   }
-
-  // ~~~Search after Purchased~~~
 
   function getTimestamp() internal view returns (uint256) {
     return now;
@@ -207,10 +191,6 @@ contract EduScience is Accessible {
   function getBlockNumber() internal view returns (uint256) {
     return block.number;
   }
-
-  // ----------------    IPFS final part   ---------------- //
-
-  // ---------------- Aunthentication part ---------------- //
 
   function login() public constant onlyExistingUser returns (bytes32) {
     return (users[msg.sender].name);
@@ -245,7 +225,6 @@ contract EduScience is Accessible {
         return (users[msg.sender].name);
     }
   }
-  // ---------------- Aunthentication part ---------------- //
 
   // ----------------    IPFS test part    ---------------- //
 
