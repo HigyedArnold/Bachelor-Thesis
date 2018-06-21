@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity 0.4.17;
 
 // Provides onlyOwner modifier, which prevents function from running if it is
 // called by anyone other than the owner.

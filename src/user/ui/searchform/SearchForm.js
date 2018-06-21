@@ -173,7 +173,6 @@ class SearchForm extends Component {
     const size = end - start
     let containerInstance = this
     return Promise.all(containerInstance.range(start, end, choice).map((index,count) => {
-      debugger
       if (choice === 1) {
         return instance.getTitle(index, {from: coinbase})
       } else if (choice === 3) {

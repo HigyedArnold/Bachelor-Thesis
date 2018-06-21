@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity 0.4.17;
 
 import "./Token.sol";
 import "./Accessible.sol";
@@ -63,7 +63,7 @@ contract ERC20Token is Token, Accessible {
 	}
 
 	function approve(address _spender, uint256 _value) public returns (bool success) {
-		allowance[msg.sender][_spender] = _value;
+		allowance[msg.sender][_spender] += _value;
 
 		emit Approval(msg.sender, _spender, _value);
 

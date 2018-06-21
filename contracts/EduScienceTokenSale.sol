@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity 0.4.17;
 // pragma -> instruction for the compiler to include only once in the compilation.
 // solidity <version> -> compiler.
 
