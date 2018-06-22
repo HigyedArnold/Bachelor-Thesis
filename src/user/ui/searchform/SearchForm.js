@@ -132,37 +132,6 @@ class SearchForm extends Component {
     this.setState({selectedData})
   }
 
-  // ------------- For data query ------------- //
-
-  // titleData is private !!!
-  // getDataSet() {
-  //   let contractEduInstance = store.getState().eduContract.eduContract
-  //   let containerInstance = this
-  //   this.getTitleSet(contractEduInstance).then(mapIterator => containerInstance.getDataStructs(mapIterator)).then(result => {
-  //     console.log('Data: ',result)
-  //     //console.log(JSON.stringify(result, null, 5))
-  //   })
-  // }
-
-  // getDataStructs(mapIterator) {
-  //   let web3 = store.getState().web3.web3Instance;
-  //   let coinbase = store.getState().address.address
-  //   const { instance, size, keys } = mapIterator;
-  //   return Promise.all(keys.map(title => 
-  //       {return instance.titleData(title).then(_data => ({ title, _data }))
-  //     })
-  //   ).then(list => list.reduce((memo,entry) => ({
-  //     [entry.title]: {
-  //       ipfsHash: entry._data[0],
-  //       publisher: entry._data[1],
-  //       title: web3.toUtf8(entry._data[2]),
-  //       popularity: entry._data[3].toNumber(),
-  //       time: entry._data[4].toNumber()
-  //     },
-  //   ...memo
-  //   }),{}))
-  // }
-
   getTitles(choice) {
     let contractEduInstance = store.getState().eduContract.eduContract
     this.getTitleSet(contractEduInstance, choice)
@@ -172,19 +141,19 @@ class SearchForm extends Component {
     let containerInstance = this
     let coinbase = store.getState().address.address
     if (choice === 1) {
-      return instance.titlesCount(function(error, count) {
+      instance.titlesCount(function(error, count) {
         var size = count.toNumber()
-        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+        containerInstance.getTitlesByIndex(0, size, instance, choice)
       })
     } else if (choice === 3) {
-      return instance.userPurchasedCount.call(coinbase, function(error, count) {
+      instance.userPurchasedCount.call(coinbase, function(error, count) {
         var size = count.toNumber()
-        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+        containerInstance.getTitlesByIndex(0, size, instance, choice)
       })
     } else {
-      return instance.addressCount.call(coinbase, function(error, count) {
+      instance.addressCount.call(coinbase, function(error, count) {
         var size = count.toNumber()
-        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+        containerInstance.getTitlesByIndex(0, size, instance, choice)
       })
     }
   }
@@ -194,20 +163,20 @@ class SearchForm extends Component {
     let web3 = store.getState().web3.web3Instance;
     let containerInstance = this
     let titles = []
-    return Promise.all(containerInstance.range(start, end, choice).map((index,count) => {
+    return Promise.all(containerInstance.range(start, end, choice).map(d => {
       if (choice === 1) {
-        return instance.getTitle(index, {from: coinbase}, function(error, title) {
-          titles.push({id: index, name: web3.toUtf8(title)})
+        return instance.getTitle(d, {from: coinbase}, function(error, title) {
+          titles.push({id: d, name: web3.toUtf8(title)})
           containerInstance.setState({data: titles})
         })
       } else if (choice === 3) {
-        return instance.getPurchaseAddress(index, {from: coinbase}, function(error, title) {
-          titles.push({id: index, name: web3.toUtf8(title)})
+        return instance.getPurchaseAddress(d, {from: coinbase}, function(error, title) {
+          titles.push({id: d, name: web3.toUtf8(title)})
           containerInstance.setState({data: titles})
         })
       } else {
-        return instance.getTitleAddress(index, {from: coinbase}, function(error, title) {
-          titles.push({id: index, name: web3.toUtf8(title)})
+        return instance.getTitleAddress(d, {from: coinbase}, function(error, title) {
+          titles.push({id: d, name: web3.toUtf8(title)})
           containerInstance.setState({data: titles})
         })
       }
