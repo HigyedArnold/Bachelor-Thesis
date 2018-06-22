@@ -55,22 +55,22 @@ contract EduScience is Accessible {
 
   // modifier onlyExistingUser {
   //   // Check if user exists or terminate
-  //   require(!(users[msg.sender].name == 0x0));
+  //   require(users[msg.sender].name.length != 0));
   //   _;
   // }
 
   modifier onlyValidName(bytes32 name) {
     // Only valid names allowed
-    require(!(name.length == 0));
+    require(name != 0x0);
     _;
   }
-
+  
   constructor(EduScienceToken _tokenContract) public {
     tokenContract = _tokenContract;
   }
 
   function publish(string _ipfsHash, bytes32 _title) public onlyValidName(_title) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
 
     require (bytes(_ipfsHash).length < 50);
     // Must be an empty slot
@@ -101,35 +101,35 @@ contract EduScience is Accessible {
 
   // For the list population.
   function getTitle(uint256 _index) constant public returns (bytes32) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titles[_index] != 0x0);
     return titles[_index];
   }
 
   function getPublisher(bytes32 _title) constant public returns (address) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].publisher;
   }
 
   function getPopularity(bytes32 _title) constant public returns (uint256) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].popularity;
   }
 
   function getPublishTime(bytes32 _title) constant public returns (uint256) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].time;
   }
 
   function purchaseIpfsAfterTitle(bytes32 _title) public {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Why to buy your own work?
@@ -152,7 +152,7 @@ contract EduScience is Accessible {
   }
 
   function getIpfsAfterTitle(bytes32 _title) public constant returns (string) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Or purchased work
@@ -172,7 +172,7 @@ contract EduScience is Accessible {
   }
 
   function votePopularity(bytes32 _title) public {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Can't increase your own popularity
@@ -184,13 +184,13 @@ contract EduScience is Accessible {
   }
 
   function getTitleAddress(uint256 _index) constant public returns (bytes32) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     require (addressData[msg.sender][_index].time != 0);
     return addressData[msg.sender][_index].title;
   }
 
   function getPurchaseAddress(uint256 _index) constant public returns (bytes32) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     require (userPurchasedData[msg.sender][_index].time != 0);
     return userPurchasedData[msg.sender][_index].title;
   }
@@ -204,7 +204,7 @@ contract EduScience is Accessible {
   }
 
   function login() public constant returns (bytes32) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     return (users[msg.sender].name);
   }
 
@@ -231,7 +231,7 @@ contract EduScience is Accessible {
   }
 
   function update(bytes32 name) public payable onlyValidName(name) returns (bytes32) {
-    require(!(users[msg.sender].name == 0x0));
+    require(users[msg.sender].name != 0x0);
     // Update user name
     if (users[msg.sender].name != 0x0) {
         users[msg.sender].name = name;
