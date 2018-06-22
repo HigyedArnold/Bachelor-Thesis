@@ -39,36 +39,46 @@ class ICOSaleForm extends Component {
     let web3 = store.getState().web3.web3Instance;
     let contractSaleInstance = store.getState().saleContract.saleContract
     let coinbase = store.getState().address.address
-    contractSaleInstance.tokenPrice().then(function(icoPrice) {
+    contractSaleInstance.tokenPrice(function(error, icoPrice) {
+      if (error) {
+        return swal('Error.')
+      }
       containerInstance.setState({address: coinbase})
       containerInstance.setState({icoPrice: web3.fromWei(icoPrice, "ether").toNumber() })
       containerInstance.setState({contractAddress: contractSaleInstance.address})
-      contractSaleInstance.tokensSold().then(function(tokensSold) {
+      contractSaleInstance.tokensSold(function(error, tokensSold) {
+        if (error) {
+          return swal('Error.')
+        }
         containerInstance.setState({tokensSold: tokensSold.toNumber()})
-        contractSaleInstance.tokensAvailable().then(function(tokensAvailable) {
+        contractSaleInstance.tokensAvailable(function(error, tokensAvailable) {
+          if (error) {
+            return swal('Error.')
+          }
           containerInstance.setState({tokensAvailable: tokensAvailable.toNumber()})
         })
       })
-    }).catch(function(error) {
-      // ERROR
     })
   }
 
   initToken() {
     let containerInstance = this
+    let coinbase = store.getState().address.address
     let contractTokenInstance = store.getState().tokenContract.tokenContract
-    contractTokenInstance.balanceOf(this.state.address).then(function(balance) {
+    contractTokenInstance.balanceOf(coinbase, function(error, balance) {
+      if (error) {
+        return swal('Error.')
+      }
       if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }
-    }).catch(function(error) {
-      // ERROR
     })
   }
 
   listenForEvents() {
     let containerInstance = this
     let contractSaleInstance = store.getState().saleContract.saleContract
+    let coinbase = store.getState().address.address
     contractSaleInstance.Sell({}, {
       fromBlock: "0",
       toBlock: "lastest",
@@ -77,7 +87,7 @@ class ICOSaleForm extends Component {
       //console.log("Sell event triggered: ", event)
       containerInstance.setState({tokensSold: event.args._tokensSold.toNumber()})
       containerInstance.setState({tokensAvailable: event.args._tokensAvailable.toNumber()})
-      if (event.args._buyer === containerInstance.state.address) {
+      if (event.args._buyer === coinbase) {
         containerInstance.initToken()
       }
       containerInstance.setState({amount: ''})

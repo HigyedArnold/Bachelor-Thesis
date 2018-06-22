@@ -14,7 +14,12 @@ export function loginUser() {
   let contractEduInstance = store.getState().eduContract.eduContract
   let coinbase = store.getState().address.address
   return function(dispatch) {
-    contractEduInstance.login({from: coinbase}).then(function(result) {
+    contractEduInstance.login({from: coinbase}, function(error, result) {
+      if (error) {
+        // If error, go to signup page.
+        console.error('Wallet ' + coinbase + ' does not have an account!')
+        return browserHistory.push('/signup')
+      }
       var userName = web3.toUtf8(result)
       dispatch(userLoggedIn({"name": userName}))
       // Used a manual redirect here as opposed to a wrapper.
@@ -24,10 +29,6 @@ export function loginUser() {
         return browserHistory.push(decodeURIComponent(currentLocation.query.redirect))
       }
       return browserHistory.push('/dashboard')
-    }).catch(function(result) {
-      // If error, go to signup page.
-      console.error('Wallet ' + coinbase + ' does not have an account!')
-      return browserHistory.push('/signup')
     })
   }
 }

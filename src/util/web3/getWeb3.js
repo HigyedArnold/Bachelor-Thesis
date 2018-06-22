@@ -25,6 +25,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
       }
 
       console.log('Injected web3 detected.');
+      console.log('Version: ', web3.version.api);
 
       resolve(store.dispatch(web3Initialized(results)))
     } else {

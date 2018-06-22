@@ -35,6 +35,13 @@ getWeb3.then(results => {
   console.log('Error in web3 initialization.')
 })
 
+getAddress.then(results => {
+  console.log('Address obtained!')
+})
+.catch(() => {
+  console.log('Error in getting address.')
+})
+
 getTokenContract.then(results => {
   console.log('TokenContract deployed!')
 })
@@ -54,13 +61,6 @@ getEduContract.then(results => {
 })
 .catch(() => {
   console.log('Error in EduContract deployment.')
-})
-
-getAddress.then(results => {
-  console.log('Address obtained!')
-})
-.catch(() => {
-  console.log('Error in getting address.')
 })
 
 ReactDOM.render((

@@ -9,11 +9,12 @@ export function storeData(buffer, title) {
   ipfs.add(buffer).then(function(ipfsHash) {
     console.log(ipfsHash);
     let data = ipfsHash[0].hash
-    contractEduInstance.publish(data, title, {from: coinbase}).then(function(result) {
+    contractEduInstance.publish(data, title, {from: coinbase}, function(error, result) {
+      if (error) {
+        return swal('Error.')
+      }
       console.log(result)
       swal('Uploaded: ' + title + '!', 'Transaction successful!','success')
     })
-  }).catch(function(error) {
-    // ERROR
   })
 }

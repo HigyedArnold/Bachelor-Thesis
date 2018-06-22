@@ -23,7 +23,7 @@ module.exports = function(deployer) {
     	// Check: https://etherconverter.online/
     	var tokenPrice = 1000000000000000;
       var tokensAvailable = 75000000;
-    	var days = 1;
+    	var days = 30;
       deployer.link(Accessible, EduScienceTokenSale);
     	return deployer.deploy(EduScienceTokenSale, EduScienceToken.address, tokensAvailable, tokenPrice, days).then(function() {
         console.log("Granting acces from EduScienceToken to EduScienceTokenSale!");

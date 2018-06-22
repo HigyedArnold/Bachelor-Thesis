@@ -90,12 +90,13 @@ class TransferForm extends Component {
     let containerInstance = this
     let coinbase = store.getState().address.address
     let contractTokenInstance = store.getState().tokenContract.tokenContract
-    contractTokenInstance.balanceOf(coinbase).then(function(balance) {
+    contractTokenInstance.balanceOf(coinbase, function(error, balance) {
+      if (error) {
+        return swal('Error.')
+      }
       if(containerInstance.refs.ref) {
         containerInstance.setState({balance: balance.toNumber()})
       }
-    }).catch(function(error) {
-      // ERROR
     })
   }
 

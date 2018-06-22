@@ -27,6 +27,7 @@ class SearchForm extends Component {
       this.setState({addressChecked: false})
       this.setState({purchasedChecked: false})
       this.setState({titleChecked: true})
+      this.setState({data: []})
       this.getTitles(1)
     }
   }
@@ -36,6 +37,7 @@ class SearchForm extends Component {
       this.setState({titleChecked: false})
       this.setState({purchasedChecked: false})
       this.setState({addressChecked: true})
+      this.setState({data: []})
       this.getTitles(2)
     }
   }
@@ -45,6 +47,7 @@ class SearchForm extends Component {
       this.setState({titleChecked: false})
       this.setState({addressChecked: false})
       this.setState({purchasedChecked: true})
+      this.setState({data: []})
       this.getTitles(3)
     }
   }
@@ -64,19 +67,29 @@ class SearchForm extends Component {
     let contractEduInstance = store.getState().eduContract.eduContract
     let coinbase = store.getState().address.address
     let containerInstance = this
-    contractEduInstance.getPublisher(title, {from: coinbase}).then(function(publisher) {
+    contractEduInstance.getPublisher(title, {from: coinbase}, function(error, publisher) {
+      if (error) {
+        return swal('Error.')
+      }
       containerInstance.setState({publisher: publisher})
-      contractEduInstance.getPopularity(title, {from: coinbase}).then(function(popularity) {
+      contractEduInstance.getPopularity(title, {from: coinbase}, function(error, popularity) {
+        if (error) {
+          return swal('Error.')
+        }
         containerInstance.setState({popularity: popularity.toNumber()})
-        contractEduInstance.getPublishTime(title, {from: coinbase}).then(function(time) {
+        contractEduInstance.getPublishTime(title, {from: coinbase}, function(error, time) {
+          if (error) {
+            return swal('Error.')
+          }
           containerInstance.setState({time: time.toNumber()})
-          contractEduInstance.getIpfsAfterTitle(title, {from: coinbase}).then(function(ipfs) {
+          contractEduInstance.getIpfsAfterTitle(title, {from: coinbase}, function(error, ipfs) {
+            if (error) {
+              return swal('Error.')
+            }
             containerInstance.setState({ipfsHash: 'https://gateway.ipfs.io/ipfs/' + ipfs})
           })
         })
       })
-    }).catch(function(error) {
-      return swal('Could not proceed.','Transaction failed!','warning')
     })
   }
 
@@ -85,12 +98,16 @@ class SearchForm extends Component {
     let contractEduInstance = store.getState().eduContract.eduContract
     let coinbase = store.getState().address.address
     let containerInstance = this
-    contractEduInstance.purchaseIpfsAfterTitle(title, {from: coinbase}).then(function(tx) {
-      contractEduInstance.getIpfsAfterTitle(title, {from: coinbase}).then(function(ipfs) {
+    contractEduInstance.purchaseIpfsAfterTitle(title, {from: coinbase}, function(error, tx) {
+      if (error) {
+        return swal('Error.')
+      }
+      contractEduInstance.getIpfsAfterTitle(title, {from: coinbase}, function(error, ipfs) {
+        if (error) {
+          return swal('Error.')
+       }
         containerInstance.setState({ipfsHash: 'https://gateway.ipfs.io/ipfs/' + ipfs})
       })
-    }).catch(function(error) {
-      return swal('Could not proceed.','Transaction failed!','warning')
     })
   }
 
@@ -98,12 +115,16 @@ class SearchForm extends Component {
     let contractEduInstance = store.getState().eduContract.eduContract
     let coinbase = store.getState().address.address
     let containerInstance = this
-    contractEduInstance.votePopularity(title, {from: coinbase}).then(function(tx) {
-      contractEduInstance.getPopularity(title, {from: coinbase}).then(function(result) {
+    contractEduInstance.votePopularity(title, {from: coinbase}, function(error, tx) {
+      if (error) {
+        return swal('Error.')
+      }
+      contractEduInstance.getPopularity(title, {from: coinbase}, function(error, result) {
+        if (error) {
+          return swal('Error.')
+        }
         containerInstance.setState({popularity: result.toNumber()})
       })
-    }).catch(function(error) {
-      // ERROR
     })
   }
 
@@ -143,56 +164,54 @@ class SearchForm extends Component {
   // }
 
   getTitles(choice) {
-    let web3 = store.getState().web3.web3Instance;
     let contractEduInstance = store.getState().eduContract.eduContract
-    let titles = []
-    let containerInstance = this
-    this.getTitleSet(contractEduInstance, choice).then(result => {
-      for (var i = 0; i < result.size; i++) {
-        titles.push({id: i, name: web3.toUtf8(result.keys[i])})
-        //console.log('Title: ', web3.toUtf8(result.keys[i]))
-      }
-      //console.log(titles)
-      containerInstance.setState({data: titles})
-      //console.log('Data titles: ', result)
-    }).catch(error => {
-      // ERROR
-    })
+    this.getTitleSet(contractEduInstance, choice)
   }
 
   getTitleSet(instance, choice) {
     let containerInstance = this
-    return this.Iterator(instance, choice).then(iterator => {
-      const { size } = iterator
-      return containerInstance.getTitlesByIndex(0, size, instance, choice)
-    })
+    let coinbase = store.getState().address.address
+    if (choice === 1) {
+      return instance.titlesCount(function(error, count) {
+        var size = count.toNumber()
+        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+      })
+    } else if (choice === 3) {
+      return instance.userPurchasedCount.call(coinbase, function(error, count) {
+        var size = count.toNumber()
+        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+      })
+    } else {
+      return instance.addressCount.call(coinbase, function(error, count) {
+        var size = count.toNumber()
+        return containerInstance.getTitlesByIndex(0, size, instance, choice)
+      })
+    }
   }
 
   getTitlesByIndex(start, end, instance, choice) {
     let coinbase = store.getState().address.address
-    const size = end - start
+    let web3 = store.getState().web3.web3Instance;
     let containerInstance = this
+    let titles = []
     return Promise.all(containerInstance.range(start, end, choice).map((index,count) => {
       if (choice === 1) {
-        return instance.getTitle(index, {from: coinbase})
+        return instance.getTitle(index, {from: coinbase}, function(error, title) {
+          titles.push({id: index, name: web3.toUtf8(title)})
+          containerInstance.setState({data: titles})
+        })
       } else if (choice === 3) {
-        return instance.getPurchaseAddress(index, {from: coinbase})
+        return instance.getPurchaseAddress(index, {from: coinbase}, function(error, title) {
+          titles.push({id: index, name: web3.toUtf8(title)})
+          containerInstance.setState({data: titles})
+        })
       } else {
-        return instance.getTitleAddress(index, {from: coinbase})
+        return instance.getTitleAddress(index, {from: coinbase}, function(error, title) {
+          titles.push({id: index, name: web3.toUtf8(title)})
+          containerInstance.setState({data: titles})
+        })
       }
     }))
-    .then(keys => ({size, keys, instance}))
-  }
-
-  Iterator(instance, choice) {
-    let coinbase = store.getState().address.address
-    if (choice === 1) {
-      return instance.titlesCount().then(count => count.toNumber()).then(size => ({ instance, size }))
-    } else if (choice === 3) {
-      return instance.userPurchasedCount.call(coinbase).then(count => count.toNumber()).then(size => ({ instance, size }))
-    } else {
-      return instance.addressCount.call(coinbase).then(count => count.toNumber()).then(size => ({ instance, size }))
-    }
   }
 
   range(start, end, choice) {
@@ -210,7 +229,6 @@ class SearchForm extends Component {
     }
     return result
   }
-
   // ------------- For data query ------------- //
 
  render() {
