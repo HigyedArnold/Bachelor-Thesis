@@ -22,11 +22,11 @@ interface Token {
     // - if in a hierarchy all contracts are abstract, their deployment will result in a failure; 
 
 	// @return The total amount of tokens.
-	// function totalSupply() external constant returns (uint256 supply);
+	// function totalSupply() external view returns (uint256 supply);
 
 	// @param _owner The address from which the balance will be retrieved.
 	// @return The balance of that account / address.
-	// function balanceOf(address _owner) external constant returns (uint256  balance);
+	// function balanceOf(address _owner) external view returns (uint256  balance);
 
 	// @notice Transfer '_value' token from 'msg.sender' to '_to'.
 	// @notice Emits Transfer event.
@@ -34,7 +34,7 @@ interface Token {
 	// @param _value The amount of token to be transferred.
 	// @param {from: ...} The address of the sender (Metadata).
 	// @return Whether the transfer was succesfull or not.
-	function transfer(address _to, uint256 _value) external constant returns (bool success);
+	function transfer(address _to, uint256 _value) external view returns (bool success);
 
 	// @notice Transfer '_value' token from '_from' to '_to' if amount is approved by '_from'.
 	// @notice Emits Transfer event.
@@ -42,17 +42,17 @@ interface Token {
     // @param _to The address of the recipient.
 	// @param _value The amount of token to be transferred.
 	// @return Whether the transfer was succesfull or not.
-	function transferFrom(address _from, address _to, uint256 _value) external constant returns (bool success);
+	function transferFrom(address _from, address _to, uint256 _value) external view returns (bool success);
 
 	// @notice 'msg.sender' approves '_spender' to spend '_value' tokens.
 	// @notice Emits Approval event.
     // @param _spender The address of the account able to transfer the tokens.
     // @param _value The amount of Wei to be approved for transfer.
     // @return Whether the approval was successful or not.
-    function approve(address _spender, uint256 _value) external constant  returns (bool success);
+    function approve(address _spender, uint256 _value) external view returns (bool success);
 
     // @param _owner The address of the account owning tokens.
     // @param _spender The address of the account able to transfer the tokens.
     // @return Amount of remaining tokens allowed to be spent.
-    // function allowance(address _owner, address _spender) external constant returns (uint256 remaining);
+    // function allowance(address _owner, address _spender) external view returns (uint256 remaining);
 }
