@@ -55,8 +55,8 @@ contract EduScience is Accessible {
 
   modifier onlyExistingUser {
     // Check if user exists or terminate
-    require(users[msg.sender].name != 0x0);
-    _;
+    if (users[msg.sender].name != 0x0)
+      _;
   }
 
   modifier onlyValidName(bytes32 name) {
