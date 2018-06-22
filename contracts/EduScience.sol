@@ -61,7 +61,7 @@ contract EduScience is Accessible {
 
   modifier onlyValidName(bytes32 name) {
     // Only valid names allowed
-    require(!(name == 0x0));
+    require(!(name.length == 0));
     _;
   }
 
