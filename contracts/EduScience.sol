@@ -53,11 +53,11 @@ contract EduScience is Accessible {
      address publisher,
      string ipfsHash);
 
-  // modifier onlyExistingUser {
-  //   // Check if user exists or terminate
-  //   require(users[msg.sender].name.length != 0));
-  //   _;
-  // }
+  modifier onlyExistingUser {
+    // Check if user exists or terminate
+    require(users[msg.sender].name != 0x0);
+    _;
+  }
 
   modifier onlyValidName(bytes32 name) {
     // Only valid names allowed
@@ -69,9 +69,7 @@ contract EduScience is Accessible {
     tokenContract = _tokenContract;
   }
 
-  function publish(string _ipfsHash, bytes32 _title) public onlyValidName(_title) {
-    require(users[msg.sender].name != 0x0);
-
+  function publish(string _ipfsHash, bytes32 _title) public onlyExistingUser onlyValidName(_title) {
     require (bytes(_ipfsHash).length < 50);
     // Must be an empty slot
     require (titleData[_title].time == 0);
@@ -100,36 +98,31 @@ contract EduScience is Accessible {
   }
 
   // For the list population.
-  function getTitle(uint256 _index) constant public returns (bytes32) {
-    require(users[msg.sender].name != 0x0);
+  function getTitle(uint256 _index) constant public onlyExistingUser returns (bytes32) {
     // Check if data exists for this entry
     require (titles[_index] != 0x0);
     return titles[_index];
   }
 
-  function getPublisher(bytes32 _title) constant public returns (address) {
-    require(users[msg.sender].name != 0x0);
+  function getPublisher(bytes32 _title) constant public onlyExistingUser returns (address) {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].publisher;
   }
 
-  function getPopularity(bytes32 _title) constant public returns (uint256) {
-    require(users[msg.sender].name != 0x0);
+  function getPopularity(bytes32 _title) constant public onlyExistingUser returns (uint256) {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].popularity;
   }
 
-  function getPublishTime(bytes32 _title) constant public returns (uint256) {
-    require(users[msg.sender].name != 0x0);
+  function getPublishTime(bytes32 _title) constant public onlyExistingUser returns (uint256) {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     return titleData[_title].time;
   }
 
-  function purchaseIpfsAfterTitle(bytes32 _title) public {
-    require(users[msg.sender].name != 0x0);
+  function purchaseIpfsAfterTitle(bytes32 _title) public onlyExistingUser {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Why to buy your own work?
@@ -151,8 +144,7 @@ contract EduScience is Accessible {
     userPurchasedData[msg.sender][n].time = titleData[_title].time;
   }
 
-  function getIpfsAfterTitle(bytes32 _title) public constant returns (string) {
-    require(users[msg.sender].name != 0x0);
+  function getIpfsAfterTitle(bytes32 _title) public constant onlyExistingUser returns (string) {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Or purchased work
@@ -171,8 +163,7 @@ contract EduScience is Accessible {
     return "NA";
   }
 
-  function votePopularity(bytes32 _title) public {
-    require(users[msg.sender].name != 0x0);
+  function votePopularity(bytes32 _title) public onlyExistingUser {
     // Check if data exists for this entry
     require (titleData[_title].time != 0);
     // Can't increase your own popularity
@@ -183,14 +174,12 @@ contract EduScience is Accessible {
     ++titleData[_title].popularity;
   }
 
-  function getTitleAddress(uint256 _index) constant public returns (bytes32) {
-    require(users[msg.sender].name != 0x0);
+  function getTitleAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
     require (addressData[msg.sender][_index].time != 0);
     return addressData[msg.sender][_index].title;
   }
 
-  function getPurchaseAddress(uint256 _index) constant public returns (bytes32) {
-    require(users[msg.sender].name != 0x0);
+  function getPurchaseAddress(uint256 _index) constant public onlyExistingUser returns (bytes32) {
     require (userPurchasedData[msg.sender][_index].time != 0);
     return userPurchasedData[msg.sender][_index].title;
   }
@@ -203,8 +192,7 @@ contract EduScience is Accessible {
     return block.number;
   }
 
-  function login() public constant returns (bytes32) {
-    require(users[msg.sender].name != 0x0);
+  function login() public constant onlyExistingUser returns (bytes32) {
     return (users[msg.sender].name);
   }
 
@@ -230,8 +218,7 @@ contract EduScience is Accessible {
     return (users[msg.sender].name);
   }
 
-  function update(bytes32 name) public payable onlyValidName(name) returns (bytes32) {
-    require(users[msg.sender].name != 0x0);
+  function update(bytes32 name) public payable onlyExistingUser onlyValidName(name) returns (bytes32) {
     // Update user name
     if (users[msg.sender].name != 0x0) {
         users[msg.sender].name = name;
@@ -239,22 +226,4 @@ contract EduScience is Accessible {
     }
   }
 
-  // ----------------    IPFS test part    ---------------- //
-
-  // mapping (address => string) public datas;
-
-  // event Store(
-  //   address publisher,
-  //   string ipfsHash);
-
-  // function storeData(string _ipfsHash) public {
-  //   datas[msg.sender] = _ipfsHash;
-  //   emit Store(msg.sender, _ipfsHash);
-  // }
-
-  // function getData() public constant returns (string) {
-  //   return datas[msg.sender];
-  // }
-
-  // ----------------    IPFS test part    ---------------- //
 }
