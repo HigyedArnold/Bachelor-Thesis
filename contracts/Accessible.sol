@@ -12,13 +12,13 @@ contract Accessible is Killable {
     event AccessRemoved(address removedAccount);
 
     modifier onlyOwnerOrAllowed() {
-        require(msg.sender == owner || allowedAccounts[msg.sender]);
-        _;
+        if (msg.sender == owner || allowedAccounts[msg.sender])
+            _;
     }
 
     modifier onlyAllowedAccount() {
-        require(allowedAccounts[msg.sender]);
-        _;
+        if (allowedAccounts[msg.sender])
+            _;
     }
 
     // Address(0) is the burnAddress.

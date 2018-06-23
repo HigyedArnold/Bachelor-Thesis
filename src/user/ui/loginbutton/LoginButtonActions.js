@@ -1,5 +1,6 @@
 import { browserHistory } from 'react-router'
 import store from '../../../store'
+import swal from 'sweetalert'
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN'
 function userLoggedIn(user) {
@@ -15,8 +16,9 @@ export function loginUser() {
   let coinbase = store.getState().address.address
   return function(dispatch) {
     contractEduInstance.login({from: coinbase}, function(error, result) {
-      if (error) {
+      if (error || web3.toUtf8(result) === "") {
         // If error, go to signup page.
+        swal('Please register!', 'See if transaction was succes!', 'warning')
         console.error('Wallet ' + coinbase + ' does not have an account!')
         return browserHistory.push('/signup')
       }

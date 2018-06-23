@@ -19,25 +19,25 @@ contract EduScienceTokenSale is Accessible {
 	// _; -> The function body where the modifier is used.
 	// Can be use onlyOwner from Ownable.
 	modifier onlyAdmin() {
-		require (admin == msg.sender);
-		_;
+		if (admin == msg.sender)
+			_;
 	}
 
 	modifier saleOpen() {
-		require (!saleClosed);
-		require (now <= deadline);
-		_;
+		if (!saleClosed && now <= deadline)
+			_;
 	}
 
 	modifier afterSale() {
-		require (now >= deadline);
-		_;
+		if (now >= deadline)
+			_;
 	}
 
     modifier noReentrancy() {
-        require(!endSaleOnce);
-        _;
-        endSaleOnce = false;
+        if (!endSaleOnce) {
+        	_;
+        	endSaleOnce = false;
+        }
     }
 
     // Events are for the clients to react on changes effieciently.

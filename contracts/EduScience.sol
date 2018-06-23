@@ -61,8 +61,8 @@ contract EduScience is Accessible {
 
   modifier onlyValidName(bytes32 name) {
     // Only valid names allowed
-    require(name != 0x0);
-    _;
+    if (name != 0x0)
+      _;
   }
   
   constructor(EduScienceToken _tokenContract) public {
