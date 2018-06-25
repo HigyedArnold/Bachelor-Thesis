@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "EduScience",
   "main": "truffle.js",
-  "homepage": "https://higyedarnold.github.io/Thesis",
+  "homepage": "https://higyedarnold.github.io/Thesis/",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
